@@ -1,69 +1,178 @@
+"use client";
+
+import { useEffect, useState } from "react";
+import Link from "next/link";
 import Image from "next/image";
 
-export default function Home() {
+import Header from "../components/Header";
+import Footer from "../components/Footer";
+import Card from "../components/ui/Card";
+import Button from "../components/ui/Button";
+
+const articles = [
+  {
+    title: "Undue Familiarity — A Subtle Snare",
+    description:
+      "Discover how undue familiarity is silently eroding the spiritual strength of Christian youth. It’s death wrapped in harmless appearances. It’s friendliness with a trap beneath.",
+    href: "/familiarity",
+  },
+  {
+    title: "“I Never Knew You” — Does God Really Know You?",
+    description:
+      "Yes, the Lord is aware that you exist—but does He know you? Let's see if God knows you...",
+    href: "/never-knew",
+  },
+  {
+    title: "Almost Saved, Eternally Lost",
+    description:
+      "Read the sad tale of Guonzou and how he missed the only chance to be saved. Learn how to avoid the same mistake in the spiritual realm.",
+    href: "/almost-saved",
+  },
+];
+
+export default function HomePage() {
+  const [currentArticle, setCurrentArticle] = useState(0);
+  const [showScrollTop, setShowScrollTop] = useState(false);
+
+  useEffect(() => {
+    const interval = setInterval(
+      () => setCurrentArticle((i) => (i + 1) % articles.length),
+      6000
+    );
+    return () => clearInterval(interval);
+  }, []);
+
+  useEffect(() => {
+    const handleScroll = () => setShowScrollTop(window.scrollY > 100);
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
+  const article = articles[currentArticle];
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+    <>
+      <Header />
+
+      <main className="min-h-screen bg-gray-100 text-gray-800">
+        {/* HERO */}
+        <section className="relative flex min-h-[70vh] items-center justify-center overflow-hidden sm:min-h-[80vh] lg:min-h-[90vh]">
+          <Image
+            src="/images/brand/secondadvent2.png"
+            alt="Second Advent Ministries"
+            fill
+            className="absolute inset-0 object-cover"
+            priority
+          />
+
+          <div className="absolute inset-0 bg-sam-deep-blue/70" />
+
+          <div className="relative z-10 mx-4 max-w-3xl rounded-3xl bg-sam-deep-blue/80 px-6 py-10 text-center text-white backdrop-blur-sm sm:px-10">
+            <h1 className="text-3xl font-bold leading-tight sm:text-4xl lg:text-5xl">
+              Welcome to Second Advent Ministries
+            </h1>
+            <p className="mt-4 text-lg text-gray-100 sm:text-xl">
+              Proclaiming the Everlasting Gospel with Truth and Love
+            </p>
+
+            <div className="mt-7 flex flex-col items-center gap-3 sm:flex-row">
+              <Button variant="primary" size="md">
+                <Link href="/bible-study">Explore Bible Studies</Link>
+              </Button>
+              <Button variant="primary" size="md">
+                <Link href="/devotionals">Explore Devotional Articles</Link>
+              </Button>
+            </div>
+          </div>
+        </section>
+
+        {/* WELCOME */}
+        <section className="mx-auto max-w-4xl px-5 py-12 text-center sm:py-16">
+          <h2 className="text-3xl font-bold text-sam-deep-blue sm:text-4xl">
+            Welcome!
+          </h2>
+          <p className="mt-4 text-lg text-gray-600">
+            Preaching the end-time message while radiating love to others.
           </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+        </section>
+
+        {/* MISSION */}
+        <section className="bg-white">
+          <div className="mx-auto max-w-4xl px-5 py-12 text-center sm:py-16">
+            <h2 className="text-3xl font-bold text-sam-deep-blue sm:text-4xl">
+              Our Mission
+            </h2>
+            <p className="mx-auto mt-5 max-w-3xl text-lg leading-8 text-gray-600">
+              To lead souls to Christ, uplift present truth, and prepare a
+              people for the Second Coming through digital evangelism, Bible
+              studies, and health reform.
+            </p>
+          </div>
+        </section>
+
+        {/* FEATURED ARTICLES */}
+        <section className="bg-gray-50 px-5 py-12 sm:py-16">
+          <div className="mx-auto max-w-3xl">
+            <h2 className="mb-8 text-center text-3xl font-bold text-gray-800 sm:text-4xl">
+              Featured Articles
+            </h2>
+
+            <Card className="relative overflow-hidden bg-sam-yellow p-6 text-center shadow-lg sm:p-8">
+              <div key={article.title} className="animate-fade-in">
+                <h3 className="text-2xl font-bold text-sam-deep-blue">
+                  {article.title}
+                </h3>
+                <p className="mt-4 text-base leading-7 text-gray-800 sm:text-lg">
+                  {article.description}
+                </p>
+                <div className="mt-6">
+                  <Button variant="secondary" size="md">
+                    <Link href={article.href}>Read More</Link>
+                  </Button>
+                </div>
+              </div>
+            </Card>
+
+            <div className="mt-5 flex justify-center gap-2">
+              {articles.map((_, index) => (
+                <button
+                  key={index}
+                  type="button"
+                  onClick={() => setCurrentArticle(index)}
+                  aria-label={`Show article ${index + 1}`}
+                  className={`h-2.5 rounded-full transition-all ${
+                    index === currentArticle
+                      ? "w-8 bg-sam-deep-blue"
+                      : "w-2.5 bg-gray-300"
+                  }`}
+                />
+              ))}
+            </div>
+
+            <div className="mt-8 text-center">
+              <Button variant="outline" size="md">
+                <Link href="/articles">View More Articles</Link>
+              </Button>
+            </div>
+          </div>
+        </section>
+
+        {/* SCROLL TO TOP */}
+        {showScrollTop && (
+          <button
+            type="button"
+            onClick={() =>
+              window.scrollTo({ top: 0, behavior: "smooth" })
+            }
+            aria-label="Back to top"
+            className="fixed bottom-6 right-6 z-50 flex h-12 w-12 items-center justify-center rounded-full bg-red-900 text-xl text-white shadow-lg transition-all duration-300 hover:bg-gray-800"
           >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
-        </div>
+            ↑
+          </button>
+        )}
       </main>
-    </div>
+
+      <Footer />
+    </>
   );
 }
