@@ -17,8 +17,9 @@ export function getArticleNavigation(
   study: string,
   currentSlug: string
 ): ArticleNavigation {
-  const sectionOrders =
-    contentOrder[section as keyof typeof contentOrder];
+  const sectionOrders = contentOrder[
+    section as keyof typeof contentOrder
+  ];
 
   if (!sectionOrders) {
     return {
@@ -27,8 +28,9 @@ export function getArticleNavigation(
     };
   }
 
-  const articles =
-    sectionOrders[study as keyof typeof sectionOrders];
+  const articles = sectionOrders[study as keyof typeof sectionOrders] as
+    | readonly ContentNavigationItem[]
+    | undefined;
 
   if (!articles) {
     return {

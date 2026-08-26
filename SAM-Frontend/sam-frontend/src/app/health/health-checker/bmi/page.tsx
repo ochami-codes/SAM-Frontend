@@ -15,7 +15,9 @@ export default function BMIPage() {
   const [height, setHeight] = useState("");
   const [heightUnit, setHeightUnit] = useState<HeightUnit>("cm");
 
-  const [result, setResult] = useState<CheckerResult | null>(null);
+  const [result, setResult] = useState<CheckerResult | null>(null
+    
+  );
 
   const handleCheck = () => {
     if (!weight || !height) {
