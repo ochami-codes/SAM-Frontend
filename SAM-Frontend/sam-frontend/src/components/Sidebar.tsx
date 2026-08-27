@@ -37,7 +37,7 @@ const navigation = [
   },
   {
     name: "Family Life Corner",
-    href: "/family-life",
+    href: "/family",
     icon: Users,
   },
   {
