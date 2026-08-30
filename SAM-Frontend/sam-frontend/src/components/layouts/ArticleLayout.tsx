@@ -117,6 +117,7 @@ export default function ArticleLayout({
                   type="button"
                   onClick={() => router.push(next.href)}
                   variant="primary"
+                  colorVariable="--article-accent"
                 >
                   Next Article
                 </Button>

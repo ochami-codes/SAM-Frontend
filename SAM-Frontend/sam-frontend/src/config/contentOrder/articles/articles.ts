@@ -24,10 +24,6 @@ export const articleOrder = [
     href: "/articles/let-go",
   },
   {
-    slug: "new-covenant",
-    href: "/bible-study/the-law/new-covenant",
-  },
-  {
     slug: "god-with-us",
     href: "/articles/god-with-us",
   },
