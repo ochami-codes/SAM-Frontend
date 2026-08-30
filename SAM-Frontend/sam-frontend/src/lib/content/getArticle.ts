@@ -1,11 +1,22 @@
+// src/lib/content/getArticle.ts
+
 import fs from "fs/promises";
 import path from "path";
+
+export interface ArticleMeta {
+  slug: string;
+  title: string | null;
+  description: string | null;
+  heroImage: string | null;
+  category?: string | null;
+  source: string;
+}
 
 export async function getArticle(
   section: string,
   study: string,
   article: string
-) {
+): Promise<ArticleMeta | null> {
   const filePath = path.join(
     process.cwd(),
     "src",
@@ -18,18 +29,30 @@ export async function getArticle(
   try {
     const source = await fs.readFile(filePath, "utf8");
 
-    // Simple regex to capture meta exports
     const titleMatch = source.match(/title:\s*["'](.+?)["']/);
-    const heroImageMatch = source.match(/heroImage:\s*["'](.+?)["']/);
-
-    const title = titleMatch ? titleMatch[1] : null;
-    const heroImage = heroImageMatch ? heroImageMatch[1] : null;
+    const descriptionMatch = source.match(
+      /description:\s*["'](.+?)["']/
+    );
+    const heroImageMatch = source.match(
+      /heroImage:\s*["'](.+?)["']/
+    );
+    const categoryMatch = source.match(
+      /category:\s*["'](.+?)["']/
+    );
 
     return {
       slug: article,
       source,
-      title,
-      heroImage,
+      title: titleMatch ? titleMatch[1] : null,
+      description: descriptionMatch
+        ? descriptionMatch[1]
+        : null,
+      heroImage: heroImageMatch
+        ? heroImageMatch[1]
+        : null,
+      category: categoryMatch
+        ? categoryMatch[1]
+        : null,
     };
   } catch {
     return null;

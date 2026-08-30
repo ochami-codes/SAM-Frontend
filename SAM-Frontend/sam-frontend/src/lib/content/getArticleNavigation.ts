@@ -14,12 +14,70 @@ interface ArticleNavigation {
 
 export function getArticleNavigation(
   section: string,
-  study: string,
-  currentSlug: string
+  studyOrSlug: string,
+  currentSlug?: string
 ): ArticleNavigation {
-  const sectionOrders = contentOrder[
-    section as keyof typeof contentOrder
-  ];
+  /*
+   * ============================
+   * Articles
+   * ============================
+   *
+   * Usage:
+   *
+   * getArticleNavigation("articles", "familiarity")
+   *
+   */
+
+  if (section === "articles") {
+  const articles = contentOrder.articles?.articles as
+    | readonly ContentNavigationItem[]
+    | undefined;
+
+  if (!articles) {
+    return { previous: null, next: null };
+  }
+
+  const currentIndex = articles.findIndex(
+    (article) => article.slug === studyOrSlug
+  );
+
+  if (currentIndex === -1) {
+    return { previous: null, next: null };
+  }
+
+  return {
+    previous: articles[currentIndex - 1] ?? null,
+    next: articles[currentIndex + 1] ?? null,
+  };
+}
+
+
+  /*
+   * ============================
+   * Bible Study / Nested Content
+   * ============================
+   *
+   * Usage:
+   *
+   * getArticleNavigation(
+   *   "bible-study",
+   *   "redemption",
+   *   "evil"
+   * )
+   *
+   */
+
+  if (!currentSlug) {
+    return {
+      previous: null,
+      next: null,
+    };
+  }
+
+  const sectionOrders =
+    contentOrder[
+      section as keyof typeof contentOrder
+    ];
 
   if (!sectionOrders) {
     return {
@@ -28,7 +86,9 @@ export function getArticleNavigation(
     };
   }
 
-  const articles = sectionOrders[study as keyof typeof sectionOrders] as
+  const articles = sectionOrders[
+    studyOrSlug as keyof typeof sectionOrders
+  ] as
     | readonly ContentNavigationItem[]
     | undefined;
 

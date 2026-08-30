@@ -1,5 +1,6 @@
 // src/config/contentOrder/index.ts
 
+import { articleOrder } from "./articles/articles";
 import { lawOrder } from "./bibleStudy/law";
 import { redemptionOrder } from "./bibleStudy/redemption";
 import { sabbathOrder } from "./bibleStudy/sabbath";
@@ -33,6 +34,9 @@ family: {
   "marriage-purpose": marriageOrder,
   relationships: relationshipOrder,
 
+},
+articles: {
+  articles: articleOrder
 }
 
 } as const;
