@@ -6,7 +6,7 @@ import PageLayout from "../../components/layouts/PageLayout";
 
 const studies = [
   {
-    title: "Bible $ Spirit of Prophecy On Diet and Lifestyle",
+    title: "Bible and Spirit of Prophecy On Diet and Lifestyle",
     href: "/health/bible-sop",
     image: "/images/health/bsop.png",
     alt: "Bible and SOP",

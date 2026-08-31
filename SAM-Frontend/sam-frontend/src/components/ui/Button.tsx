@@ -1,4 +1,8 @@
-import type { ButtonHTMLAttributes, ReactNode } from "react";
+import {
+  ButtonHTMLAttributes,
+  CSSProperties,
+  ReactNode,
+} from "react";
 import Link from "next/link";
 import type { UrlObject } from "url";
 
@@ -7,7 +11,10 @@ interface ButtonProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: "primary" | "secondary" | "outline" | "ghost";
   size?: "sm" | "md" | "lg";
   href?: string | UrlObject;
+
+  colorScheme?: "default" | "theme";
   colorVariable?: string;
+
   className?: string;
 }
 
@@ -30,39 +37,76 @@ export default function Button({
   variant = "primary",
   size = "md",
   href,
+  colorScheme = "default",
   colorVariable = "--study-accent",
   className = "",
   ...props
 }: ButtonProps) {
-  const variantClasses: Record<typeof variant, string> = {
-    primary: `bg-[var(${colorVariable})] text-white hover:opacity-90`,
-    secondary: `bg-sam-blue text-white hover:bg-sam-blue-dark`,
-    outline: `
-      border border-[var(${colorVariable})]
-      text-[var(${colorVariable})]
-      hover:bg-[var(${colorVariable})] hover:text-white
-    `,
-    ghost: `text-[var(${colorVariable})] hover:bg-[var(${colorVariable})]/10`,
-  };
+  const isTheme = colorScheme === "theme";
 
   const styles = `
     ${baseStyles}
     ${sizes[size]}
-    ${variantClasses[variant]}
-    focus:ring-[var(${colorVariable})]
     ${className}
+  `;
+
+  const themeStyle: CSSProperties | undefined = isTheme
+    ? {
+        backgroundColor:
+          variant === "primary" || variant === "secondary"
+            ? `var(${colorVariable})`
+            : undefined,
+
+        color:
+          variant === "outline" || variant === "ghost"
+            ? `var(${colorVariable})`
+            : undefined,
+
+        borderColor:
+          variant === "outline"
+            ? `var(${colorVariable})`
+            : undefined,
+      }
+    : undefined;
+
+  const variantClasses = isTheme
+    ? {
+        primary: "text-white hover:opacity-90",
+        secondary: "text-white hover:opacity-90",
+        outline: "border hover:text-white",
+        ghost: "",
+      }[variant]
+    : {
+        primary: "bg-sam-blue text-white hover:bg-sam-blue-dark",
+        secondary: "bg-sam-green text-white hover:opacity-90",
+        outline:
+          "border border-sam-blue text-sam-blue hover:bg-sam-blue hover:text-white",
+        ghost: "text-sam-blue hover:bg-sam-blue/10",
+      }[variant];
+
+  const finalClassName = `
+    ${styles}
+    ${variantClasses}
   `;
 
   if (href) {
     return (
-      <Link href={href} className={styles}>
+      <Link
+        href={href}
+        className={finalClassName}
+        style={themeStyle}
+      >
         {children}
       </Link>
     );
   }
 
   return (
-    <button className={styles} {...props}>
+    <button
+      className={finalClassName}
+      style={themeStyle}
+      {...props}
+    >
       {children}
     </button>
   );

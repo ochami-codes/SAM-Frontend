@@ -1,120 +1,133 @@
 "use client";
 
-import { FormEvent, useState } from "react";
+import { useState } from "react";
+import Button from "../ui/Button";
+
+type FormStatus = "idle" | "sending" | "success" | "error";
 
 export default function ContactForm() {
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [status, setStatus] = useState("");
+  const [status, setStatus] = useState<FormStatus>("idle");
 
-  async function handleSubmit(event: FormEvent<HTMLFormElement>) {
+  async function handleSubmit(event: SubmitEvent) {
     event.preventDefault();
-    setIsSubmitting(true);
-    setStatus("");
 
-    const form = event.currentTarget;
+    setStatus("sending");
+
+    const form = event.currentTarget as HTMLFormElement;
     const formData = new FormData(form);
 
-    // TODO: Connect to your API
-    console.log(Object.fromEntries(formData));
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL}/contact`,
+        {
+          method: "POST",
+          body: formData,
+        }
+      );
 
-    await new Promise((resolve) => setTimeout(resolve, 800));
+      const result = await response.json();
 
-    setStatus("Thank you for contacting us. We’ll get back to you soon.");
-    form.reset();
-    setIsSubmitting(false);
+      if (!response.ok || !result.success) {
+        throw new Error("Failed to send message");
+      }
+
+      setStatus("success");
+      form.reset();
+    } catch {
+      setStatus("error");
+    }
   }
 
   return (
     <form
       onSubmit={handleSubmit}
-      className="mx-auto flex max-w-2xl flex-col gap-5"
+      className="mx-auto max-w-2xl rounded-xl bg-white p-6 shadow-md sm:p-8"
     >
-      <div>
+      <div className="mb-5">
         <label
-          htmlFor="contact-name"
-          className="mb-2 block font-medium text-sam-deep-blue"
+          htmlFor="name"
+          className="mb-2 block font-semibold text-gray-800"
         >
-          Your Name
+          Full Name
         </label>
 
         <input
           type="text"
-          id="contact-name"
+          id="name"
           name="name"
           required
-          placeholder="Enter your name"
-          className="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none transition focus:border-sam-deep-blue focus:ring-2 focus:ring-sam-deep-blue/20"
+          className="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none focus:border-sam-blue focus:ring-2 focus:ring-sam-blue/20"
         />
       </div>
 
-      <div>
+      <div className="mb-5">
         <label
-          htmlFor="contact-email"
-          className="mb-2 block font-medium text-sam-deep-blue"
+          htmlFor="email"
+          className="mb-2 block font-semibold text-gray-800"
         >
-          Your Email
+          Email Address
         </label>
 
         <input
           type="email"
-          id="contact-email"
+          id="email"
           name="email"
           required
-          placeholder="Enter your email"
-          className="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none transition focus:border-sam-deep-blue focus:ring-2 focus:ring-sam-deep-blue/20"
+          className="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none focus:border-sam-blue focus:ring-2 focus:ring-sam-blue/20"
         />
       </div>
 
-      <div>
+      <div className="mb-5">
         <label
-          htmlFor="contact-subject"
-          className="mb-2 block font-medium text-sam-deep-blue"
+          htmlFor="subject"
+          className="mb-2 block font-semibold text-gray-800"
         >
           Subject
         </label>
 
         <input
           type="text"
-          id="contact-subject"
+          id="subject"
           name="subject"
-          required
-          placeholder="What would you like to ask about?"
-          className="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none transition focus:border-sam-deep-blue focus:ring-2 focus:ring-sam-deep-blue/20"
+          placeholder="Prayer Request, Bible Study, Question, etc."
+          className="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none focus:border-sam-blue focus:ring-2 focus:ring-sam-blue/20"
         />
       </div>
 
-      <div>
+      <div className="mb-6">
         <label
-          htmlFor="contact-message"
-          className="mb-2 block font-medium text-sam-deep-blue"
+          htmlFor="message"
+          className="mb-2 block font-semibold text-gray-800"
         >
-          Message
+          Your Message
         </label>
 
         <textarea
-          id="contact-message"
+          id="message"
           name="message"
           rows={6}
           required
-          placeholder="Write your message here..."
-          className="w-full resize-y rounded-lg border border-gray-300 px-4 py-3 outline-none transition focus:border-sam-deep-blue focus:ring-2 focus:ring-sam-deep-blue/20"
+          className="w-full resize-y rounded-lg border border-gray-300 px-4 py-3 outline-none focus:border-sam-blue focus:ring-2 focus:ring-sam-blue/20"
         />
       </div>
 
-      <button
+      <Button
         type="submit"
-        disabled={isSubmitting}
-        className="rounded-lg bg-sam-deep-blue px-6 py-3 font-semibold text-white transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
+        variant="primary"
+        disabled={status === "sending"}
       >
-        {isSubmitting ? "Sending..." : "Send Message"}
-      </button>
+        {status === "sending" ? "Sending..." : "Send Message"}
+      </Button>
 
-      {status && (
-        <p
-          role="status"
-          className="rounded-lg bg-green-50 p-4 text-center text-green-700"
-        >
-          {status}
+      {status === "success" && (
+        <p className="mt-4 text-center font-semibold text-green-600">
+          Message sent successfully!
+        </p>
+      )}
+
+      {status === "error" && (
+        <p className="mt-4 text-center font-semibold text-red-600">
+          Something went wrong. Please try again.
         </p>
       )}
     </form>

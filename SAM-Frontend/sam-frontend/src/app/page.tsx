@@ -14,19 +14,19 @@ const articles = [
     title: "Undue Familiarity — A Subtle Snare",
     description:
       "Discover how undue familiarity is silently eroding the spiritual strength of Christian youth. It’s death wrapped in harmless appearances. It’s friendliness with a trap beneath.",
-    href: "/familiarity",
+    href: "/articles/familiarity",
   },
   {
     title: "“I Never Knew You” — Does God Really Know You?",
     description:
       "Yes, the Lord is aware that you exist—but does He know you? Let's see if God knows you...",
-    href: "/never-knew",
+    href: "/articles/never-knew-you",
   },
   {
     title: "Almost Saved, Eternally Lost",
     description:
       "Read the sad tale of Guonzou and how he missed the only chance to be saved. Learn how to avoid the same mistake in the spiritual realm.",
-    href: "/almost-saved",
+    href: "/articles/almost-saved",
   },
 ];
 
@@ -80,7 +80,7 @@ export default function HomePage() {
                 <Link href="/bible-study">Explore Bible Studies</Link>
               </Button>
               <Button variant="primary" size="md">
-                <Link href="/devotionals">Explore Devotional Articles</Link>
+                <Link href="/articles">Explore Devotional Articles</Link>
               </Button>
             </div>
           </div>

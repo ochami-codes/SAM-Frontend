@@ -82,6 +82,7 @@ export default function StudyLayout({
                 type="button"
                 onClick={() => router.push(next.href)}
                 variant="primary"
+                colorScheme="theme"
               >
                 Next Study
               </Button>
