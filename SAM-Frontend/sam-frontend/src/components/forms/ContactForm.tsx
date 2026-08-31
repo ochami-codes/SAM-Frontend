@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, type SubmitEvent } from "react";
 import Button from "../ui/Button";
 
 type FormStatus = "idle" | "sending" | "success" | "error";
