@@ -1,42 +1,42 @@
 export const immoralityOrder = [
   {
     slug: "introduction",
-    href: "/family/immorality/introduction",
+    href: "/public/family/immorality/introduction",
   },
   {
     slug: "sex-gift",
-    href: "/family/immorality/sex-gift",
+    href: "/public/family/immorality/sex-gift",
   },
   {
     slug: "adultery",
-    href: "/family/immorality/adultery",
+    href: "/public/family/immorality/adultery",
   },
   {
     slug: "fornication",
-    href: "/family/immorality/fornication",
+    href: "/public/family/immorality/fornication",
   },
   {
     slug: "pornography",
-    href: "/family/immorality/pornography"
+    href: "/public/family/immorality/pornography"
   },
   {
     slug: "masturbation",
-    href: "/family/immorality/masturbation",
+    href: "/public/family/immorality/masturbation",
   },
   {
     slug: "lgbtq",
-    href: "/family/immorality/lgbtq",
+    href: "/public/family/immorality/lgbtq",
   },
   {
     slug: "trifling",
-    href: "/family/immorality/trifling",
+    href: "/public/family/immorality/trifling",
   },
   {
     slug: "polygamy",
-    href: "/family/immorality/polygamy",
+    href: "/public/family/immorality/polygamy",
   },
   {
     slug: "purity",
-    href: "/family/immorality/purity"
+    href: "/public/family/immorality/purity"
   }
 ] as const;

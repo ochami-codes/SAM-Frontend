@@ -1,42 +1,42 @@
 export const standardOrder = [
   {
     slug: "christian-life",
-    href: "/bible-study/standards/christian-life",
+    href: "/public/bible-study/standards/christian-life",
   },
   {
     slug: "body-temple",
-    href: "/bible-study/standards/body-temple",
+    href: "/public/bible-study/standards/body-temple",
   },
   {
     slug: "dress-simplicity",
-    href: "/bible-study/standards/dress-simplicity",
+    href: "/public/bible-study/standards/dress-simplicity",
   },
   {
     slug: "media",
-    href: "/bible-study/standards/media",
+    href: "/public/bible-study/standards/media",
   },
   {
     slug: "music",
-    href: "/bible-study/standards/music",
+    href: "/public/bible-study/standards/music",
   },
   {
     slug: "social-life",
-    href: "/bible-study/standards/social-life",
+    href: "/public/bible-study/standards/social-life",
   },
   {
     slug: "financial-stewardship",
-    href: "/bible-study/standards/financial-stewardship",
+    href: "/public/bible-study/standards/financial-stewardship",
   },
   {
     slug: "work",
-    href: "/bible-study/standards/work",
+    href: "/public/bible-study/standards/work",
   },
   {
     slug: "remnant",
-    href: "/bible-study/standards/remnant",
+    href: "/public/bible-study/standards/remnant",
   },
   {
     slug: "daily-victory",
-    href: "/bible-study/standards/daily-victory",
+    href: "/public/bible-study/standards/daily-victory",
   },
 ] as const;

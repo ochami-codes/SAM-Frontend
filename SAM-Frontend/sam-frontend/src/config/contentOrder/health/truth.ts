@@ -1,14 +1,14 @@
 export const truthOrder = [
   {
     slug: "proteins",
-    href: "/health/truth/proteins",
+    href: "/public/health/truth/proteins",
   },
   {
     slug: "fats",
-    href: "/health/truth/fats",
+    href: "/public/health/truth/fats",
   },
   {
     slug: "carbohydrates",
-    href: "/health/truth/carbohydrates",
+    href: "/public/health/truth/carbohydrates",
   },
 ] as const;

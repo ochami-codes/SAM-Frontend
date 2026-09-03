@@ -1,118 +1,118 @@
 export const articleOrder = [
     {
     slug: "never-knew-you",
-    href: "/articles/never-knew-you",
+    href: "/public/articles/never-knew-you",
   },
   {
     slug: "righteousness",
-    href: "/articles/righteousness",
+    href: "/public/articles/righteousness",
   },
   {
     slug: "familiarity",
-    href: "/articles/familiarity",
+    href: "/public/articles/familiarity",
   },
   {
     slug: "delayed",
-    href: "/articles/delayed",
+    href: "/public/articles/delayed",
   },
   {
     slug: "faithfulness",
-    href: "/articles/faithfulness",
+    href: "/public/articles/faithfulness",
   },
   {
     slug: "let-go",
-    href: "/articles/let-go",
+    href: "/public/articles/let-go",
   },
   {
     slug: "god-with-us",
-    href: "/articles/god-with-us",
+    href: "/public/articles/god-with-us",
   },
   {
     slug: "keeper",
-    href: "/articles/keeper",
+    href: "/public/articles/keeper",
   },
   {
     slug: "almost-saved",
-    href: "/articles/almost-saved",
+    href: "/public/articles/almost-saved",
   },
   {
     slug: "look-live",
-    href: "/articles/look-live",
+    href: "/public/articles/look-live",
   },
   {
     slug: "siege",
-    href: "/articles/siege",
+    href: "/public/articles/siege",
   },
   {
     slug: "danger-delay",
-    href: "/articles/danger-delay",
+    href: "/public/articles/danger-delay",
   },
   {
     slug: "promise-trials",
-    href: "/articles/promise-trials",
+    href: "/public/articles/promise-trials",
   },
   {
     slug: "doubt",
-    href: "/articles/doubt",
+    href: "/public/articles/doubt",
   },
   {
     slug: "true-worship",
-    href: "/articles/true-worship",
+    href: "/public/articles/true-worship",
   },
   {
     slug: "sodom",
-    href: "/articles/sodom",
+    href: "/public/articles/sodom",
   },
   {
     slug: "tithe",
-    href: "/articles/tithe",
+    href: "/public/articles/tithe",
   },
   {
     slug: "secret-sin",
-    href: "/articles/secret-sin",
+    href: "/public/articles/secret-sin",
   },
   {
     slug: "godly-wife",
-    href: "/articles/godly-wife",
+    href: "/public/articles/godly-wife",
   },
   {
     slug: "abominable-prayer",
-    href: "/articles/abominable-prayer",
+    href: "/public/articles/abominable-prayer",
   },
   {
     slug: "monkey",
-    href: "/articles/monkey",
+    href: "/public/articles/monkey",
   },
   {
     slug: "ai-gospel",
-    href: "/articles/ai-gospel",
+    href: "/public/articles/ai-gospel",
   },
   {
     slug: "judas",
-    href: "/articles/judas",
+    href: "/public/articles/judas",
   },
   {
     slug: "heavenly-choir",
-    href: "/articles/heavenly-choir",
+    href: "/public/articles/heavenly-choir",
   },
   {
     slug: "beautiful-flock",
-    href: "/articles/beautiful-flock",
+    href: "/public/articles/beautiful-flock",
   },
   {
     slug: "cancer",
-    href: "/articles/cancer",
+    href: "/public/articles/cancer",
   },
   {
     slug: "which-god",
-    href: "/articles/which-god",
+    href: "/public/articles/which-god",
   },
   {
     slug: "judgement",
-    href: "/articles/judgement",
+    href: "/public/articles/judgement",
   },
   {
     slug: "left-behind",
-    href: "/articles/left-behind",
+    href: "/public/articles/left-behind",
   },
 ] as const;

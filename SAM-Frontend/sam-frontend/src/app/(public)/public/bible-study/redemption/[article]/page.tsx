@@ -1,0 +1,53 @@
+import { notFound } from "next/navigation";
+import { MDXRemote } from "next-mdx-remote/rsc";
+
+import StudyLayout from "@/src/components/layouts/StudyLayout";
+import Quote from "@/src/components/ui/Quote";
+import PrayerRequestForm from "@/src/components/forms/PrayerRequestForm";
+
+import { getArticle } from "@/src/lib/content/getArticle";
+import { getArticleNavigation } from "@/src/lib/content/getArticleNavigation";
+
+export default async function ArticlePage({
+  params,
+}: {
+  params: Promise<{
+    article: string;
+  }>;
+}) {
+  const { article } = await params;
+
+  const content = await getArticle(
+    "bible-study",
+    "redemption",
+    article
+  );
+
+  if (!content) {
+    notFound();
+  }
+
+  const navigation = getArticleNavigation(
+    "bible-study",
+    "redemption",
+    article
+  );
+
+  return (
+    <StudyLayout
+      title={content.title ?? ""}
+      heroImage={content.heroImage ?? ""}
+      theme="bible"
+      previous={navigation.previous}
+      next={navigation.next}
+    >
+      <MDXRemote
+        source={content.source}
+        components={{
+          Quote,
+          PrayerRequestForm,
+        }}
+      />
+    </StudyLayout>
+  );
+}

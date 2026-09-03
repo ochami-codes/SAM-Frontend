@@ -3,50 +3,50 @@
 export const redemptionOrder = [
   {
     slug: "evil",
-    href: "/bible-study/redemption/evil",
+    href: "/public/bible-study/redemption/evil",
   },
   {
     slug: "fall",
-    href: "/bible-study/redemption/fall",
+    href: "/public/bible-study/redemption/fall",
   },
   {
     slug: "plan",
-    href: "/bible-study/redemption/plan",
+    href: "/public/bible-study/redemption/plan",
   },
   {
     slug: "covenant",
-    href: "/bible-study/redemption/covenant",
+    href: "/public/bible-study/redemption/covenant",
   },
   {
     slug: "mission",
-    href: "/bible-study/redemption/mission",
+    href: "/public/bible-study/redemption/mission",
   },
   {
     slug: "victory",
-    href: "/bible-study/redemption/victory",
+    href: "/public/bible-study/redemption/victory",
   },
   {
     slug: "resurrection",
-    href: "/bible-study/redemption/resurrection",
+    href: "/public/bible-study/redemption/resurrection",
   },
   {
     slug: "ministry",
-    href: "/bible-study/redemption/ministry",
+    href: "/public/bible-study/redemption/ministry",
   },
   {
     slug: "conflict",
-    href: "/bible-study/redemption/conflict",
+    href: "/public/bible-study/redemption/conflict",
   },
   {
     slug: "second-coming",
-    href: "/bible-study/redemption/second-coming",
+    href: "/public/bible-study/redemption/second-coming",
   },
   {
     slug: "new-earth",
-    href: "/bible-study/redemption/new-earth",
+    href: "/public/bible-study/redemption/new-earth",
   },
   {
     slug: "your-place",
-    href: "/bible-study/redemption/your-place",
+    href: "/public/bible-study/redemption/your-place",
   },
 ] as const;

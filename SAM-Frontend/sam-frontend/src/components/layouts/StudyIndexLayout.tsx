@@ -21,7 +21,7 @@ export default function StudyIndexLayout({
   heroQuote,
   children,
   theme = "default",
-  backHref = "/bible-study",
+  backHref = "/public/bible-study",
   backLabel = "Back",
 }: StudyIndexLayoutProps) {
   const colors = studyThemes[theme];

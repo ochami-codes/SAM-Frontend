@@ -1,42 +1,42 @@
 export const relationshipOrder = [
   {
     slug: "age",
-    href: "/family/relationships/age",
+    href: "/public/family/relationships/age",
   },
   {
     slug: "faith",
-    href: "/family/relationships/faith",
+    href: "/public/family/relationships/faith",
   },
   {
     slug: "flags",
-    href: "/family/relationships/flags",
+    href: "/public/family/relationships/flags",
   },
   {
     slug: "old",
-    href: "/family/relationships/old",
+    href: "/public/family/relationships/old",
   },
   {
     slug: "parents",
-    href: "/family/relationships/parents"
+    href: "/public/family/relationships/parents"
   },
   {
     slug: "finances",
-    href: "/family/relationships/finances",
+    href: "/public/family/relationships/finances",
   },
   {
     slug: "intimacy",
-    href: "/family/relationships/intimacy",
+    href: "/public/family/relationships/intimacy",
   },
   {
     slug: "heartbreak",
-    href: "/family/relationships/heartbreak",
+    href: "/public/family/relationships/heartbreak",
   },
   {
     slug: "unfaithful",
-    href: "/family/relationships/unfaithful"
+    href: "/public/family/relationships/unfaithful"
   },
   {
     slug: "cohabiting",
-    href: "/family/relationships/cohabiting"
+    href: "/public/family/relationships/cohabiting"
   }
 ] as const;

@@ -8,6 +8,7 @@ import {
   HeartPulse,
   Home,
   Info,
+  LogIn,
   Mail,
   Menu,
   Newspaper,
@@ -17,12 +18,12 @@ import {
 
 const navigation = [
   { name: "Home", href: "/", icon: Home },
-  { name: "About", href: "/about", icon: Info },
-  { name: "Bible Study", href: "/bible-study", icon: BookOpen },
-  { name: "Health Corner", href: "/health", icon: HeartPulse },
-  { name: "Family Life Corner", href: "/family", icon: Users },
-  { name: "Articles", href: "/articles", icon: Newspaper },
-  { name: "Contacts", href: "/contacts", icon: Mail },
+  { name: "About", href: "/public/about", icon: Info },
+  { name: "Bible Study", href: "/public/bible-study", icon: BookOpen },
+  { name: "Health Corner", href: "/public/health", icon: HeartPulse },
+  { name: "Family Life Corner", href: "/public/family", icon: Users },
+  { name: "Articles", href: "/public/articles", icon: Newspaper },
+  { name: "Contacts", href: "/public/contacts", icon: Mail },
 ];
 
 export default function Sidebar() {
@@ -82,7 +83,11 @@ export default function Sidebar() {
         {/* Header */}
         <div className="sticky top-0 z-10 bg-sam-deep-blue px-5 py-4 text-white shadow-md">
           <div className="flex items-center justify-between">
-            <Link href="/" className="flex items-center gap-2">
+            <Link
+              href="/"
+              onClick={() => setIsOpen(false)}
+              className="flex items-center gap-2"
+            >
               <Image
                 src="/images/brand/secondadvent2.png"
                 alt="Second Advent Ministries Logo"
@@ -96,7 +101,10 @@ export default function Sidebar() {
                 <h2 className="text-lg font-bold text-sam-yellow">
                   Second Advent
                 </h2>
-                <p className="text-sm text-sam-blue">Ministries</p>
+
+                <p className="text-sm text-sam-blue">
+                  Ministries
+                </p>
               </div>
             </Link>
 
@@ -163,7 +171,8 @@ export default function Sidebar() {
         </nav>
 
         {/* Sidebar footer */}
-        <div className="px-4 pb-5">
+        <div className="space-y-3 px-4 pb-5">
+          {/* Scripture */}
           <div className="rounded-2xl bg-sam-deep-blue p-4 text-center">
             <p className="text-sm font-medium leading-6 text-white">
               &quot;Fear God, and give glory to Him...&quot;
@@ -173,6 +182,32 @@ export default function Sidebar() {
               Revelation 14:7
             </p>
           </div>
+
+          {/* Admin Login */}
+          <Link
+            href="/admin/auth/login"
+            onClick={() => setIsOpen(false)}
+            className="
+              group flex items-center justify-center gap-2
+              rounded-xl border border-sam-border
+              px-4 py-2.5
+              text-sm font-medium text-sam-muted
+              transition-all duration-200
+              hover:border-sam-blue
+              hover:bg-sam-blue/10
+              hover:text-sam-deep-blue
+            "
+          >
+            <LogIn
+              className="
+                h-4 w-4
+                transition-transform duration-200
+                group-hover:translate-x-0.5
+              "
+            />
+
+            <span>Admin Login</span>
+          </Link>
         </div>
       </aside>
     </>
