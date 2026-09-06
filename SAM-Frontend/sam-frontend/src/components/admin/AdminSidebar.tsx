@@ -3,6 +3,7 @@
 "use client";
 
 import Link from "next/link";
+import { useAuth } from "@/src/hooks/auth/useAuth";
 import { usePathname } from "next/navigation";
 import {
   LayoutDashboard,
@@ -96,12 +97,12 @@ const navigation: NavItem[] = [
 ];
 
 export default function AdminSidebar({
-  role,
   isOpen,
   onClose,
 }: AdminSidebarProps) {
   const pathname = usePathname();
-
+  const { logout, user } = useAuth();
+  const role = user?.role as AdminRole;
   const visibleItems = navigation.filter((item) =>
     item.roles.includes(role)
   );
@@ -213,6 +214,7 @@ export default function AdminSidebar({
 
             <button
               type="button"
+              onClick={logout}
               className="flex w-full items-center gap-3 rounded-lg px-3 py-2.5 text-sm font-medium text-sam-muted transition-colors hover:bg-sam-background hover:text-sam-text"
             >
               <LogOut className="h-5 w-5" />

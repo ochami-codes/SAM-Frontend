@@ -5,6 +5,8 @@ import { useState } from "react";
 import AuthLayout from "@/src/components/layouts/AuthLayout";
 import Button from "@/src/components/ui/Button";
 
+import { useChangePassword } from "@/src/hooks/auth/useChangePassword";
+
 export default function ChangePasswordPage() {
   const [currentPassword, setCurrentPassword] =
     useState("");
@@ -15,39 +17,29 @@ export default function ChangePasswordPage() {
   const [confirmPassword, setConfirmPassword] =
     useState("");
 
-  const [error, setError] = useState("");
+  const changePasswordMutation =
+    useChangePassword();
 
   function handleSubmit(
     event: React.SubmitEvent<HTMLFormElement>
   ) {
     event.preventDefault();
 
-    setError("");
-
     if (newPassword.length < 8) {
-      setError(
-        "New password must be at least 8 characters long."
-      );
       return;
     }
 
     if (newPassword !== confirmPassword) {
-      setError("New passwords do not match.");
       return;
     }
 
     if (currentPassword === newPassword) {
-      setError(
-        "Your new password must be different from your current password."
-      );
       return;
     }
 
-    // Password change will be connected to the backend later.
-    console.log({
+    changePasswordMutation.mutate({
       currentPassword,
       newPassword,
-      confirmPassword,
     });
   }
 
@@ -79,6 +71,9 @@ export default function ChangePasswordPage() {
             }
             placeholder="Enter current password"
             required
+            disabled={
+              changePasswordMutation.isPending
+            }
             className="
               w-full rounded-xl border border-sam-border
               bg-sam-surface px-4 py-3
@@ -88,6 +83,8 @@ export default function ChangePasswordPage() {
               placeholder:text-sam-muted
               focus:border-sam-blue
               focus:ring-2 focus:ring-sam-blue/20
+              disabled:cursor-not-allowed
+              disabled:opacity-60
             "
           />
         </div>
@@ -111,6 +108,11 @@ export default function ChangePasswordPage() {
             }
             placeholder="Enter new password"
             required
+            minLength={8}
+            maxLength={128}
+            disabled={
+              changePasswordMutation.isPending
+            }
             className="
               w-full rounded-xl border border-sam-border
               bg-sam-surface px-4 py-3
@@ -120,6 +122,8 @@ export default function ChangePasswordPage() {
               placeholder:text-sam-muted
               focus:border-sam-blue
               focus:ring-2 focus:ring-sam-blue/20
+              disabled:cursor-not-allowed
+              disabled:opacity-60
             "
           />
         </div>
@@ -143,6 +147,11 @@ export default function ChangePasswordPage() {
             }
             placeholder="Confirm new password"
             required
+            minLength={8}
+            maxLength={128}
+            disabled={
+              changePasswordMutation.isPending
+            }
             className="
               w-full rounded-xl border border-sam-border
               bg-sam-surface px-4 py-3
@@ -152,22 +161,49 @@ export default function ChangePasswordPage() {
               placeholder:text-sam-muted
               focus:border-sam-blue
               focus:ring-2 focus:ring-sam-blue/20
+              disabled:cursor-not-allowed
+              disabled:opacity-60
             "
           />
         </div>
 
-        {/* Error */}
-        {error && (
-          <p className="rounded-xl bg-red-50 p-3 text-sm text-red-600">
-            {error}
-          </p>
-        )}
+        {/* Client-side validation */}
+        {newPassword.length > 0 &&
+          newPassword.length < 8 && (
+            <p className="rounded-xl bg-red-50 p-3 text-sm text-red-600">
+              New password must be at least 8
+              characters long.
+            </p>
+          )}
+
+        {confirmPassword.length > 0 &&
+          newPassword !== confirmPassword && (
+            <p className="rounded-xl bg-red-50 p-3 text-sm text-red-600">
+              New passwords do not match.
+            </p>
+          )}
+
+        {currentPassword.length > 0 &&
+          currentPassword === newPassword && (
+            <p className="rounded-xl bg-red-50 p-3 text-sm text-red-600">
+              Your new password must be different
+              from your current password.
+            </p>
+          )}
 
         <Button
           type="submit"
           className="w-full"
+          disabled={
+            changePasswordMutation.isPending ||
+            newPassword.length < 8 ||
+            newPassword !== confirmPassword ||
+            currentPassword === newPassword
+          }
         >
-          Change Password
+          {changePasswordMutation.isPending
+            ? "Changing Password..."
+            : "Change Password"}
         </Button>
       </form>
     </AuthLayout>

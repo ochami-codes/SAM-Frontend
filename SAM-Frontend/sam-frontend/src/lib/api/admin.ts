@@ -24,8 +24,11 @@ export interface UpdateUserData {
   status?: "active" | "suspended";
 }
 
-export function getUsers() {
-  return api<AdminUser[]>("/admin/users");
+export function adminInvitations(email: string) {
+  return api<AdminUser[]>("/api/admin/invitations", {
+    method: "POST",
+    body: JSON.stringify({ email }),
+  });
 }
 
 export function getUser(userId: string) {

@@ -1,41 +1,54 @@
 "use client";
 
 import { useState } from "react";
+import { useSearchParams, useRouter } from "next/navigation";
 
 import AuthLayout from "@/src/components/layouts/AuthLayout";
 import Button from "@/src/components/ui/Button";
 
+import { useResetPassword } from "@/src/hooks/auth/useResetPassword";
+
 export default function ResetPasswordPage() {
+  const searchParams = useSearchParams();
+  const router = useRouter();
+
+  const token = searchParams.get("token");
+
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] =
     useState("");
 
-  const [error, setError] = useState("");
+  const resetPasswordMutation =
+    useResetPassword();
 
   function handleSubmit(
     event: React.SubmitEvent<HTMLFormElement>
   ) {
     event.preventDefault();
 
-    setError("");
+    if (!token) {
+      return;
+    }
 
     if (password.length < 8) {
-      setError(
-        "Password must be at least 8 characters long."
-      );
       return;
     }
 
     if (password !== confirmPassword) {
-      setError("Passwords do not match.");
       return;
     }
 
-    // Password reset will be connected to the backend later.
-    console.log({
-      password,
-      confirmPassword,
-    });
+    resetPasswordMutation.mutate(
+      {
+        token,
+        password,
+      },
+      {
+        onSuccess: () => {
+          router.push("/admin/auth/login");
+        },
+      }
+    );
   }
 
   return (
@@ -66,6 +79,11 @@ export default function ResetPasswordPage() {
             }
             placeholder="Enter new password"
             required
+            minLength={8}
+            maxLength={128}
+            disabled={
+              resetPasswordMutation.isPending
+            }
             className="
               w-full rounded-xl border border-sam-border
               bg-sam-surface px-4 py-3
@@ -75,6 +93,8 @@ export default function ResetPasswordPage() {
               placeholder:text-sam-muted
               focus:border-sam-blue
               focus:ring-2 focus:ring-sam-blue/20
+              disabled:cursor-not-allowed
+              disabled:opacity-60
             "
           />
         </div>
@@ -98,6 +118,11 @@ export default function ResetPasswordPage() {
             }
             placeholder="Confirm new password"
             required
+            minLength={8}
+            maxLength={128}
+            disabled={
+              resetPasswordMutation.isPending
+            }
             className="
               w-full rounded-xl border border-sam-border
               bg-sam-surface px-4 py-3
@@ -107,22 +132,41 @@ export default function ResetPasswordPage() {
               placeholder:text-sam-muted
               focus:border-sam-blue
               focus:ring-2 focus:ring-sam-blue/20
+              disabled:cursor-not-allowed
+              disabled:opacity-60
             "
           />
         </div>
 
-        {/* Error */}
-        {error && (
-          <p className="rounded-xl bg-red-50 p-3 text-sm text-red-600">
-            {error}
-          </p>
-        )}
+        {/* Client-side validation */}
+        {password.length > 0 &&
+          password.length < 8 && (
+            <p className="rounded-xl bg-red-50 p-3 text-sm text-red-600">
+              Password must be at least 8
+              characters long.
+            </p>
+          )}
+
+        {confirmPassword.length > 0 &&
+          password !== confirmPassword && (
+            <p className="rounded-xl bg-red-50 p-3 text-sm text-red-600">
+              Passwords do not match.
+            </p>
+          )}
 
         <Button
           type="submit"
           className="w-full"
+          disabled={
+            resetPasswordMutation.isPending ||
+            !token ||
+            password.length < 8 ||
+            password !== confirmPassword
+          }
         >
-          Reset Password
+          {resetPasswordMutation.isPending
+            ? "Resetting Password..."
+            : "Reset Password"}
         </Button>
       </form>
     </AuthLayout>
