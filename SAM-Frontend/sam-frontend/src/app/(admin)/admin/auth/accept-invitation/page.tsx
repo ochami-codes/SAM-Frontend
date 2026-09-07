@@ -1,5 +1,6 @@
 "use client";
 
+import { Suspense, useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
 import AuthLayout from "@/src/components/layouts/AuthLayout";
@@ -8,39 +9,24 @@ import Card from "@/src/components/ui/Card";
 
 import { useAcceptInvitation } from "@/src/hooks/auth/useAcceptInvitation";
 
-import { useState } from "react";
-
-export default function AcceptInvitationPage() {
+function AcceptInvitationContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
   const token = searchParams.get("token");
 
   const [password, setPassword] = useState("");
-  const [confirmPassword, setConfirmPassword] =
-    useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
 
-  const acceptInvitationMutation =
-    useAcceptInvitation();
+  const acceptInvitationMutation = useAcceptInvitation();
 
-  function handleSubmit(
-    event: React.SubmitEvent<HTMLFormElement>
-  ) {
+  function handleSubmit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    if (!token) {
-      return;
-    }
-
-    if (password !== confirmPassword) {
-      return;
-    }
+    if (!token || password !== confirmPassword) return;
 
     acceptInvitationMutation.mutate(
-      {
-        token,
-        password,
-      },
+      { token, password },
       {
         onSuccess: () => {
           setTimeout(() => {
@@ -60,19 +46,15 @@ export default function AcceptInvitationPage() {
         <Card className="p-6">
           <div className="space-y-4 text-center">
             <div className="mx-auto flex h-12 w-12 items-center justify-center rounded-full bg-sam-blue/10">
-              <span className="text-xl text-sam-deep-blue">
-                ✓
-              </span>
+              <span className="text-xl text-sam-deep-blue">✓</span>
             </div>
 
             <div>
               <h2 className="text-lg font-semibold text-sam-text">
                 Account created successfully
               </h2>
-
               <p className="mt-2 text-sm text-sam-muted">
-                You can now sign in with your new
-                administrator account.
+                You can now sign in with your new administrator account.
               </p>
             </div>
           </div>
@@ -87,10 +69,7 @@ export default function AcceptInvitationPage() {
       description="Create your administrator password to activate your account."
     >
       <Card className="p-6">
-        <form
-          onSubmit={handleSubmit}
-          className="space-y-5"
-        >
+        <form onSubmit={handleSubmit} className="space-y-5">
           {/* Password */}
           <div>
             <label
@@ -99,21 +78,16 @@ export default function AcceptInvitationPage() {
             >
               Password
             </label>
-
             <input
               id="password"
               type="password"
               value={password}
-              onChange={(e) =>
-                setPassword(e.target.value)
-              }
+              onChange={(e) => setPassword(e.target.value)}
               required
               minLength={8}
               maxLength={128}
               autoComplete="new-password"
-              disabled={
-                acceptInvitationMutation.isPending
-              }
+              disabled={acceptInvitationMutation.isPending}
               placeholder="Enter your password"
               className="w-full rounded-lg border border-sam-border bg-sam-surface px-4 py-3 text-sam-text outline-none transition focus:border-sam-blue-dark focus:ring-2 focus:ring-sam-blue/20 disabled:cursor-not-allowed disabled:opacity-60"
             />
@@ -127,36 +101,30 @@ export default function AcceptInvitationPage() {
             >
               Confirm password
             </label>
-
             <input
               id="confirmPassword"
               type="password"
               value={confirmPassword}
-              onChange={(e) =>
-                setConfirmPassword(e.target.value)
-              }
+              onChange={(e) => setConfirmPassword(e.target.value)}
               required
               minLength={8}
               maxLength={128}
               autoComplete="new-password"
-              disabled={
-                acceptInvitationMutation.isPending
-              }
+              disabled={acceptInvitationMutation.isPending}
               placeholder="Confirm your password"
               className="w-full rounded-lg border border-sam-border bg-sam-surface px-4 py-3 text-sam-text outline-none transition focus:border-sam-blue-dark focus:ring-2 focus:ring-sam-blue/20 disabled:cursor-not-allowed disabled:opacity-60"
             />
           </div>
 
           {/* Password mismatch */}
-          {password !== confirmPassword &&
-            confirmPassword.length > 0 && (
-              <div
-                role="alert"
-                className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"
-              >
-                Passwords do not match.
-              </div>
-            )}
+          {password !== confirmPassword && confirmPassword.length > 0 && (
+            <div
+              role="alert"
+              className="rounded-lg border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700"
+            >
+              Passwords do not match.
+            </div>
+          )}
 
           {/* Submit */}
           <Button
@@ -177,3 +145,12 @@ export default function AcceptInvitationPage() {
     </AuthLayout>
   );
 }
+
+export default function AcceptInvitationPage() {
+  return (
+    <Suspense fallback={<div>Loading invitation...</div>}>
+      <AcceptInvitationContent />
+    </Suspense>
+  );
+}
+
