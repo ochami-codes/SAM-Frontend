@@ -45,8 +45,8 @@ const navigation: NavItem[] = [
     icon: FileText,
     roles: ["super_admin", "admin"],
     children: [
-      { label: "Default Content", href: "/admin/default-content", icon: FileText, roles: ["super_admin", "admin"] },
-      { label: "Managed Content", href: "/admin/managed-content", icon: Layers, roles: ["super_admin"] },
+      { label: "Default Content", href: "/admin/default-content", icon: FileText, roles: ["super_admin"] },
+      { label: "Managed Content", href: "/admin/managed-content", icon: Layers, roles: ["super_admin", "admin"] },
     ],
   },
 

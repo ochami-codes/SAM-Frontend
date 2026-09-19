@@ -7,6 +7,7 @@ import type { ReactNode } from "react";
 
 import AdminSidebar from "@/src/components/admin/AdminSidebar";
 import AdminHeader from "@/src/components/admin/AdminHeader";
+import ProtectedRoutes from "@/src/components/auth/ProtectedRoutes";
 
 type AdminRole = "super_admin" | "admin";
 
@@ -24,28 +25,30 @@ export default function AdminLayout({
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   return (
-    <div className="min-h-screen bg-sam-background text-sam-text">
-      {/* Sidebar */}
-      <AdminSidebar
-        role={role}
-        isOpen={sidebarOpen}
-        onClose={() => setSidebarOpen(false)}
-      />
-
-      {/* Main area */}
-      <div className="min-h-screen lg:ml-64">
-        {/* Header */}
-        <AdminHeader
+    <ProtectedRoutes>
+      <div className="min-h-screen bg-sam-background text-sam-text">
+        {/* Sidebar */}
+        <AdminSidebar
           role={role}
-          name={name}
-          onMenuClick={() => setSidebarOpen(true)}
+          isOpen={sidebarOpen}
+          onClose={() => setSidebarOpen(false)}
         />
 
-        {/* Page content */}
-        <main className="p-4 sm:p-6 lg:p-8">
-          {children}
-        </main>
+        {/* Main area */}
+        <div className="min-h-screen lg:ml-64">
+          {/* Header */}
+          <AdminHeader
+            role={role}
+            name={name}
+            onMenuClick={() => setSidebarOpen(true)}
+          />
+
+          {/* Page content */}
+          <main className="p-4 sm:p-6 lg:p-8">
+            {children}
+          </main>
+        </div>
       </div>
-    </div>
+    </ProtectedRoutes>
   );
 }
