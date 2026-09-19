@@ -54,7 +54,7 @@ export default function BloodSugarPage() {
       <section className="bg-gradient-to-br from-emerald-700 to-emerald-900 text-white">
         <div className="mx-auto max-w-5xl px-6 py-14">
           <Link
-            href="/health/health-checker"
+            href="/public/health/health-checker"
             className="mb-8 inline-flex items-center gap-2 text-sm text-emerald-100 transition hover:text-white"
           >
             <ArrowLeft size={18} />
@@ -320,19 +320,19 @@ export default function BloodSugarPage() {
             Home
           </Link>
 
-          <Link href="/bible-study" className="hover:text-emerald-300">
+          <Link href="/public/bible-study" className="hover:text-emerald-300">
             Bible Studies
           </Link>
 
-          <Link href="/health" className="hover:text-emerald-300">
+          <Link href="/public/health" className="hover:text-emerald-300">
             Health Corner
           </Link>
 
-          <Link href="/about" className="hover:text-emerald-300">
+          <Link href="/public/about" className="hover:text-emerald-300">
             About
           </Link>
 
-          <Link href="/contacts" className="hover:text-emerald-300">
+          <Link href="/public/contacts" className="hover:text-emerald-300">
             Contacts
           </Link>
         </div>

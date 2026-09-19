@@ -24,13 +24,27 @@ export interface UpdateUserData {
   status?: "active" | "suspended";
 }
 
-export function adminInvitations(email: string) {
-  return api<AdminUser[]>("/api/admin/invitations", {
-    method: "POST",
-    body: JSON.stringify({ email }),
-  });
+export interface InviteAdminData {
+  fullName: string;
+  email: string;
 }
 
+export interface InviteAdminResponse {
+  success: boolean;
+  message: string;
+}
+
+export async function adminInvitations(
+  data: InviteAdminData
+): Promise<InviteAdminResponse> {
+  return api<InviteAdminResponse>(
+    "/api/admin/invitations",
+    {
+      method: "POST",
+      body: JSON.stringify(data),
+    }
+  );
+}
 export function getUser(userId: string) {
   return api<AdminUser>(`/admin/users/${userId}`);
 }

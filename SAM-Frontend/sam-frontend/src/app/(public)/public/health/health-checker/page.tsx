@@ -178,19 +178,23 @@ export default function HealthCheckerPage() {
             Home
           </Link>
 
-          <Link href="/bible-study" className="hover:text-emerald-300">
+          <Link href="/public/bible-study" className="hover:text-emerald-300">
             Bible Studies
           </Link>
 
-          <Link href="/health" className="hover:text-emerald-300">
+          <Link href="/public/health" className="hover:text-emerald-300">
             Health Corner
           </Link>
 
-          <Link href="/about" className="hover:text-emerald-300">
+          <Link href="/public/family" className="hover:text-emerald-300">
+            Family Corner
+          </Link>
+
+          <Link href="/public/about" className="hover:text-emerald-300">
             About
           </Link>
 
-          <Link href="/contacts" className="hover:text-emerald-300">
+          <Link href="/public/contacts" className="hover:text-emerald-300">
             Contacts
           </Link>
         </div>

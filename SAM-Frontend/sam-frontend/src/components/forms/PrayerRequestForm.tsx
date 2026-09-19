@@ -1,31 +1,34 @@
 "use client";
 
-import { useState } from "react";
-import type { SubmitEventHandler } from "react";
+import { useSubmitContactMessage } from "@/src/hooks/contact/useSubmitContactMessage";
+import { useContactFormValidation } from "@/src/hooks/validation/useContactFormValidation";
 
 export default function PrayerRequestForm() {
-  const [isSubmitting, setIsSubmitting] = useState(false);
-  const [status, setStatus] = useState("");
+  const submitMessageMutation = useSubmitContactMessage();
+  const { errors, validateField, validateForm, clearErrors } =
+    useContactFormValidation();
 
-  const handleSubmit: SubmitEventHandler<HTMLFormElement> = async (event) => {
-  event.preventDefault();
-    setIsSubmitting(true);
-    setStatus("");
+  function handleSubmit(event: React.SubmitEvent<HTMLFormElement>) {
+    event.preventDefault();
 
     const form = event.currentTarget;
     const formData = new FormData(form);
 
-    // TODO: Connect to your API
-    console.log(Object.fromEntries(formData));
+    const values = {
+      name: String(formData.get("name") ?? ""),
+      email: String(formData.get("email") ?? ""),
+      subject: "Prayer Request",
+      message: String(formData.get("message") ?? ""),
+    };
 
-    await new Promise((resolve) => setTimeout(resolve, 800));
+    if (!validateForm(values)) return;
 
-    setStatus(
-      "Thank you for sharing your prayer request. We’ll keep you in prayer."
-    );
-
-    form.reset();
-    setIsSubmitting(false);
+    submitMessageMutation.mutate(values, {
+      onSuccess: () => {
+        clearErrors();
+        form.reset();
+      },
+    });
   }
 
   return (
@@ -33,6 +36,7 @@ export default function PrayerRequestForm() {
       onSubmit={handleSubmit}
       className="mx-auto flex max-w-2xl flex-col gap-5"
     >
+      {/* Name */}
       <div>
         <label
           htmlFor="prayer-name"
@@ -40,17 +44,22 @@ export default function PrayerRequestForm() {
         >
           Your Name
         </label>
-
         <input
           type="text"
           id="prayer-name"
           name="name"
           required
+          disabled={submitMessageMutation.isPending}
           placeholder="Enter your name"
-          className="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none transition focus:border-sam-deep-blue focus:ring-2 focus:ring-sam-deep-blue/20"
+          onBlur={(e) => validateField("name", e.target.value)}
+          className="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none transition focus:border-sam-deep-blue focus:ring-2 focus:ring-sam-deep-blue/20 disabled:cursor-not-allowed disabled:bg-gray-100"
         />
+        {errors.name && (
+          <p className="mt-1 text-sm text-red-600">{errors.name}</p>
+        )}
       </div>
 
+      {/* Email */}
       <div>
         <label
           htmlFor="prayer-email"
@@ -58,17 +67,22 @@ export default function PrayerRequestForm() {
         >
           Your Email
         </label>
-
         <input
           type="email"
           id="prayer-email"
           name="email"
           required
+          disabled={submitMessageMutation.isPending}
           placeholder="Enter your email"
-          className="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none transition focus:border-sam-deep-blue focus:ring-2 focus:ring-sam-deep-blue/20"
+          onBlur={(e) => validateField("email", e.target.value)}
+          className="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none transition focus:border-sam-deep-blue focus:ring-2 focus:ring-sam-deep-blue/20 disabled:cursor-not-allowed disabled:bg-gray-100"
         />
+        {errors.email && (
+          <p className="mt-1 text-sm text-red-600">{errors.email}</p>
+        )}
       </div>
 
+      {/* Message */}
       <div>
         <label
           htmlFor="prayer-request"
@@ -76,31 +90,39 @@ export default function PrayerRequestForm() {
         >
           Message or Prayer Request
         </label>
-
         <textarea
           id="prayer-request"
           name="message"
           rows={7}
           required
+          disabled={submitMessageMutation.isPending}
           placeholder="Share your message or prayer request..."
-          className="w-full resize-y rounded-lg border border-gray-300 px-4 py-3 outline-none transition focus:border-sam-deep-blue focus:ring-2 focus:ring-sam-deep-blue/20"
+          onBlur={(e) => validateField("message", e.target.value)}
+          className="w-full resize-y rounded-lg border border-gray-300 px-4 py-3 outline-none transition focus:border-sam-deep-blue focus:ring-2 focus:ring-sam-deep-blue/20 disabled:cursor-not-allowed disabled:bg-gray-100"
         />
+        {errors.message && (
+          <p className="mt-1 text-sm text-red-600">{errors.message}</p>
+        )}
       </div>
 
+      {/* Submit */}
       <button
         type="submit"
-        disabled={isSubmitting}
+        disabled={submitMessageMutation.isPending}
         className="rounded-lg bg-sam-deep-blue px-6 py-3 font-semibold text-white transition hover:opacity-90 disabled:cursor-not-allowed disabled:opacity-60"
       >
-        {isSubmitting ? "Sending..." : "Send Prayer Request"}
+        {submitMessageMutation.isPending
+          ? "Sending..."
+          : "Send Prayer Request"}
       </button>
 
-      {status && (
+      {submitMessageMutation.isSuccess && (
         <p
           role="status"
           className="rounded-lg bg-green-50 p-4 text-center text-green-700"
         >
-          {status}
+          Thank you for sharing your prayer request.
+          We’ll keep you in prayer.
         </p>
       )}
     </form>

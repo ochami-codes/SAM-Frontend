@@ -20,7 +20,7 @@ export default function Card({
 }: CardProps) {
   return (
     <div
-      className={`rounded-2xl border border-sam-border bg-sam-surface shadow-sm ${className}`}
+      className={`rounded-2xl border border-sam-border bg-sam-surface shadow-sm overflow-hidden ${className}`}
       {...props}
     >
       {children}
@@ -35,7 +35,7 @@ export function CardHeader({
 }: HTMLAttributes<HTMLDivElement> & { children: ReactNode }) {
   return (
     <div
-      className={`p-6 ${className}`}
+      className={`px-6 pt-6 ${className}`}
       {...props}
     >
       {children}
@@ -95,7 +95,7 @@ export function CardFooter({
 }: HTMLAttributes<HTMLDivElement> & { children: ReactNode }) {
   return (
     <div
-      className={`flex items-center px-6 pb-6 ${className}`}
+      className={`flex items-center px-6 pb-6 border-t border-sam-border ${className}`}
       {...props}
     >
       {children}

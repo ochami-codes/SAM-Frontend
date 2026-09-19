@@ -8,17 +8,24 @@ import { toast } from "sonner";
 import { getErrorMessage } from "@/src/lib/errors/messageErrors";
 import type { ApiError } from "@/src/lib/errors/ApiError";
 
-function handleMutationError(error: Error): void {
-  const message = getErrorMessage(
-    error as ApiError
-  );
-
-  toast.error(message);
-}
-
 export const queryClient = new QueryClient({
   mutationCache: new MutationCache({
-    onError: handleMutationError,
+    onSuccess: (_data, _variables, _context, mutation) => {
+      const message =
+        mutation.meta?.successMessage;
+
+      if (typeof message === "string") {
+        toast.success(message);
+      }
+    },
+
+    onError: (error) => {
+      const message = getErrorMessage(
+        error as ApiError
+      );
+
+      toast.error(message);
+    },
   }),
 
   defaultOptions: {

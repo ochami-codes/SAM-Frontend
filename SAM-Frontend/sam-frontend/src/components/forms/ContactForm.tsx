@@ -1,41 +1,38 @@
 "use client";
 
-import { useState, type SubmitEvent } from "react";
+import { useState } from "react";
 import Button from "../ui/Button";
-
-type FormStatus = "idle" | "sending" | "success" | "error";
+import { useSubmitContactMessage } from "@/src/hooks/contact/useSubmitContactMessage";
+import { useContactFormValidation } from "@/src/hooks/validation/useContactFormValidation";
 
 export default function ContactForm() {
-  const [status, setStatus] = useState<FormStatus>("idle");
+  const [submitted, setSubmitted] = useState(false);
+  const submitMessageMutation = useSubmitContactMessage();
+  const { errors, validateField, validateForm, clearErrors } =
+    useContactFormValidation();
 
-  async function handleSubmit(event: SubmitEvent) {
+  function handleSubmit(event: React.SubmitEvent<HTMLFormElement>) {
     event.preventDefault();
 
-    setStatus("sending");
-
-    const form = event.currentTarget as HTMLFormElement;
+    const form = event.currentTarget;
     const formData = new FormData(form);
 
-    try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL}/contact`,
-        {
-          method: "POST",
-          body: formData,
-        }
-      );
+    const values = {
+      name: String(formData.get("name") ?? ""),
+      email: String(formData.get("email") ?? ""),
+      subject: String(formData.get("subject") ?? ""),
+      message: String(formData.get("message") ?? ""),
+    };
 
-      const result = await response.json();
+    if (!validateForm(values)) return;
 
-      if (!response.ok || !result.success) {
-        throw new Error("Failed to send message");
-      }
-
-      setStatus("success");
-      form.reset();
-    } catch {
-      setStatus("error");
-    }
+    submitMessageMutation.mutate(values, {
+      onSuccess: () => {
+        setSubmitted(true);
+        clearErrors();
+        form.reset();
+      },
+    });
   }
 
   return (
@@ -43,6 +40,7 @@ export default function ContactForm() {
       onSubmit={handleSubmit}
       className="mx-auto max-w-2xl rounded-xl bg-white p-6 shadow-md sm:p-8"
     >
+      {/* Name */}
       <div className="mb-5">
         <label
           htmlFor="name"
@@ -50,16 +48,21 @@ export default function ContactForm() {
         >
           Full Name
         </label>
-
         <input
           type="text"
           id="name"
           name="name"
           required
-          className="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none focus:border-sam-blue focus:ring-2 focus:ring-sam-blue/20"
+          disabled={submitMessageMutation.isPending}
+          onBlur={(e) => validateField("name", e.target.value)}
+          className="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none focus:border-sam-blue focus:ring-2 focus:ring-sam-blue/20 disabled:cursor-not-allowed disabled:bg-gray-100"
         />
+        {errors.name && (
+          <p className="mt-1 text-sm text-red-600">{errors.name}</p>
+        )}
       </div>
 
+      {/* Email */}
       <div className="mb-5">
         <label
           htmlFor="email"
@@ -67,16 +70,21 @@ export default function ContactForm() {
         >
           Email Address
         </label>
-
         <input
           type="email"
           id="email"
           name="email"
           required
-          className="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none focus:border-sam-blue focus:ring-2 focus:ring-sam-blue/20"
+          disabled={submitMessageMutation.isPending}
+          onBlur={(e) => validateField("email", e.target.value)}
+          className="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none focus:border-sam-blue focus:ring-2 focus:ring-sam-blue/20 disabled:cursor-not-allowed disabled:bg-gray-100"
         />
+        {errors.email && (
+          <p className="mt-1 text-sm text-red-600">{errors.email}</p>
+        )}
       </div>
 
+      {/* Subject */}
       <div className="mb-5">
         <label
           htmlFor="subject"
@@ -84,16 +92,21 @@ export default function ContactForm() {
         >
           Subject
         </label>
-
         <input
           type="text"
           id="subject"
           name="subject"
           placeholder="Prayer Request, Bible Study, Question, etc."
-          className="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none focus:border-sam-blue focus:ring-2 focus:ring-sam-blue/20"
+          disabled={submitMessageMutation.isPending}
+          onBlur={(e) => validateField("subject", e.target.value)}
+          className="w-full rounded-lg border border-gray-300 px-4 py-3 outline-none focus:border-sam-blue focus:ring-2 focus:ring-sam-blue/20 disabled:cursor-not-allowed disabled:bg-gray-100"
         />
+        {errors.subject && (
+          <p className="mt-1 text-sm text-red-600">{errors.subject}</p>
+        )}
       </div>
 
+      {/* Message */}
       <div className="mb-6">
         <label
           htmlFor="message"
@@ -101,33 +114,31 @@ export default function ContactForm() {
         >
           Your Message
         </label>
-
         <textarea
           id="message"
           name="message"
           rows={6}
           required
-          className="w-full resize-y rounded-lg border border-gray-300 px-4 py-3 outline-none focus:border-sam-blue focus:ring-2 focus:ring-sam-blue/20"
+          disabled={submitMessageMutation.isPending}
+          onBlur={(e) => validateField("message", e.target.value)}
+          className="w-full resize-y rounded-lg border border-gray-300 px-4 py-3 outline-none focus:border-sam-blue focus:ring-2 focus:ring-sam-blue/20 disabled:cursor-not-allowed disabled:bg-gray-100"
         />
+        {errors.message && (
+          <p className="mt-1 text-sm text-red-600">{errors.message}</p>
+        )}
       </div>
 
       <Button
         type="submit"
         variant="primary"
-        disabled={status === "sending"}
+        disabled={submitMessageMutation.isPending}
       >
-        {status === "sending" ? "Sending..." : "Send Message"}
+        {submitMessageMutation.isPending ? "Sending..." : "Send Message"}
       </Button>
 
-      {status === "success" && (
+      {submitted && (
         <p className="mt-4 text-center font-semibold text-green-600">
           Message sent successfully!
-        </p>
-      )}
-
-      {status === "error" && (
-        <p className="mt-4 text-center font-semibold text-red-600">
-          Something went wrong. Please try again.
         </p>
       )}
     </form>
