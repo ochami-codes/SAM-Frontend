@@ -1,9 +1,9 @@
 import PageLayout from "@/src/components/layouts/PageLayout";
-import { getArticles } from "@/src/lib/content/getArticles";
+import { getPublicContentList } from "@/src/lib/content/getPublicContentList";
 import ArticlesList from "./ArticlesList";
 
 export default async function ArticlesPage() {
-  const articles = await getArticles();
+  const articles = await getPublicContentList({section:"articles"});
 
   return (
     <PageLayout
@@ -32,4 +32,4 @@ export default async function ArticlesPage() {
       </section>
     </PageLayout>
   );
-}
+}                   

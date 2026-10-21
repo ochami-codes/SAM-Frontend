@@ -2,15 +2,18 @@
 
 import { useEffect, useState } from "react";
 
+import { DEFAULT_CONTENT_METADATA } from "@/src/config/contentMetadata";
+import { useAdminContentMetadata } from "@/src/hooks/content/useAdminContentMetadata";
+
 import type {
-  ManagedContent,
-  ManagedContentSection,
-  ManagedContentStatus,
+ManagedContent,
+ManagedContentSection,
+ManagedContentStatus,
 } from "@/src/lib/api/managedContent";
 
 import {
-  ManagedContentMetadata,
-  type ManagedContentMetadataValues,
+ManagedContentMetadata,
+type ManagedContentMetadataValues,
 } from "./ManagedContentMetadata";
 
 import { ManagedContentEditor } from "./ManagedContentEditor";
@@ -18,133 +21,138 @@ import { ManagedContentFormActions } from "./ManagedContentFormActions";
 import { ManagedContentMdxPreview } from "./ManagedContentMdxPreview";
 
 export interface ManagedContentFormData {
-  title: string;
-  slug: string;
-  section: ManagedContentSection;
-  category?: string;
-  content: string;
-  heroImage?: string;
-  status?: ManagedContentStatus;
+title: string;
+slug: string;
+section: ManagedContentSection;
+category?: string;
+content: string;
+heroImage?: string;
+order?: number;
+status?: ManagedContentStatus;
 }
 
 interface ManagedContentFormProps {
-  mode: "create" | "edit";
-  initialData?: ManagedContent;
-  isSubmitting: boolean;
-  onSubmit: (data: ManagedContentFormData) => void;
-  onCancel: () => void;
+mode: "create" | "edit";
+initialData?: ManagedContent;
+isSubmitting: boolean;
+onSubmit: (data: ManagedContentFormData) => void;
+onCancel: () => void;
 }
 
 function createInitialValues(
-  data?: ManagedContent
+data?: ManagedContent
 ): ManagedContentMetadataValues {
-  return {
-    title: data?.title ?? "",
-    slug: data?.slug ?? "",
-    section: data?.section ?? "articles",
-    category: data?.category ?? "",
-    heroImage: data?.heroImage ?? "",
-    status: data?.status ?? "draft",
-  };
+return {
+title: data?.title ?? "",
+slug: data?.slug ?? "",
+section: data?.section ?? "articles",
+category: data?.category ?? "",
+heroImage: data?.heroImage ?? "",
+order: data?.order,
+status: data?.status ?? "draft",
+};
 }
 
 export function ManagedContentForm({
-  mode,
-  initialData,
-  isSubmitting,
-  onSubmit,
-  onCancel,
+mode,
+initialData,
+isSubmitting,
+onSubmit,
+onCancel,
 }: ManagedContentFormProps) {
-  const [metadata, setMetadata] =
-    useState<ManagedContentMetadataValues>(
-      createInitialValues(initialData)
-    );
+const {
+data: sections = DEFAULT_CONTENT_METADATA,
+} = useAdminContentMetadata();
 
-  const [content, setContent] = useState(
-    initialData?.content ?? ""
-  );
+const [metadata, setMetadata] =
+useState<ManagedContentMetadataValues>(
+() => createInitialValues(initialData)
+);
 
-  useEffect(() => {
-    if (!initialData) {
-      return;
-    }
+const [content, setContent] = useState(
+initialData?.content ?? ""
+);
 
-    setMetadata(createInitialValues(initialData));
-    setContent(initialData.content);
-  }, [initialData]);
+useEffect(() => {
+if (!initialData) {
+return;
+}
 
-  function handleMetadataChange<
-    K extends keyof ManagedContentMetadataValues
-  >(
-    field: K,
-    value: ManagedContentMetadataValues[K]
-  ) {
-    setMetadata((current) => ({
-      ...current,
-      [field]: value,
-    }));
-  }
+setMetadata(createInitialValues(initialData));
+setContent(initialData.content);
+}, [initialData]);
 
-  function handleSubmit(
-    event: React.SubmitEvent<HTMLFormElement>
-  ) {
-    event.preventDefault();
+function handleMetadataChange<
+K extends keyof ManagedContentMetadataValues
 
-    onSubmit({
-      title: metadata.title.trim(),
-      slug: metadata.slug.trim().toLowerCase(),
-      section: metadata.section,
+> (
+ field: K,
+ value: ManagedContentMetadataValues[K]
+ ) {
+ setMetadata((current) => ({
+ ...current,
+ [field]: value,
+ }));
+ }
 
-      ...(metadata.section !== "articles" &&
-        metadata.category.trim() && {
-          category:
-            metadata.category.trim().toLowerCase(),
-        }),
+function handleSubmit(
+event: React.SubmitEvent<HTMLFormElement>
+) {
+event.preventDefault();
 
-      content,
+const category = metadata.category.trim();
 
-      ...(metadata.heroImage.trim() && {
-        heroImage: metadata.heroImage.trim(),
-      }),
+onSubmit({
+  title: metadata.title.trim(),
+  slug: metadata.slug.trim().toLowerCase(),
+  section: metadata.section,
+  ...(metadata.section !== "articles" &&
+    category && {
+      category: category.toLowerCase(),
+    }),
+  content,
+  ...(metadata.heroImage.trim() && {
+    heroImage: metadata.heroImage.trim(),
+  }),
+  ...(metadata.order !== undefined && {
+    order: metadata.order,
+  }),
+  ...(mode === "create" && {
+    status: metadata.status,
+  }),
+});
 
-      ...(mode === "create" && {
-        status: metadata.status,
-      }),
-    });
-  }
+}
 
-  const preview = (
-    <ManagedContentMdxPreview
-      title={metadata.title}
-      heroImage={metadata.heroImage}
-      section={metadata.section}
-      category={metadata.category}
-      content={content}
-    />
-  );
+const preview = ( <ManagedContentMdxPreview
+   title={metadata.title}
+   heroImage={metadata.heroImage}
+   section={metadata.section}
+   category={metadata.category}
+   content={content}
+ />
+);
 
-  return (
-    <form
-      onSubmit={handleSubmit}
-      className="space-y-6"
-    >
-      <ManagedContentMetadata
-        values={metadata}
-        mode={mode}
-        onChange={handleMetadataChange}
-      />
+return ( <form
+   onSubmit={handleSubmit}
+   className="space-y-6"
+ > <ManagedContentMetadata
+     values={metadata}
+     mode={mode}
+     sections={sections}
+     onChange={handleMetadataChange}
+   />
+  <ManagedContentEditor
+    value={content}
+    onChange={setContent}
+    preview={preview}
+  />
 
-      <ManagedContentEditor
-        value={content}
-        onChange={setContent}
-        preview={preview}
-      />
-
-      <ManagedContentFormActions
-        mode={mode}
-        isSubmitting={isSubmitting}
-        onCancel={onCancel}
-      />
-    </form>
-  );
+  <ManagedContentFormActions
+    mode={mode}
+    isSubmitting={isSubmitting}
+    onCancel={onCancel}
+  />
+</form>
+);
 }

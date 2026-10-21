@@ -3,7 +3,6 @@
 import { useRouter } from "next/navigation";
 
 import { ManagedContentForm, type ManagedContentFormData } from "@/src/components/admin/managed-content/ManagedContentForm";
-
 import { useCreateManagedContent } from "@/src/hooks/managed-content/useCreateManagedContent";
 
 export default function NewManagedContentPage() {

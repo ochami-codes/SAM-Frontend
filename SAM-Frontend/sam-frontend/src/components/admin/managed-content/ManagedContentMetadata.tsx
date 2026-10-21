@@ -4,18 +4,22 @@ import type {
   ManagedContentSection,
   ManagedContentStatus,
 } from "@/src/lib/api/managedContent";
-
+import { useState } from "react";
+import type { ContentSection } from "@/src/config/contentMetadata";
+import { isDefaultContentCategory } from "@/src/config/contentMetadata";
 export interface ManagedContentMetadataValues {
   title: string;
   slug: string;
   section: ManagedContentSection;
   category: string;
   heroImage: string;
+  order?: number;
   status: ManagedContentStatus;
 }
 
 interface ManagedContentMetadataProps {
   values: ManagedContentMetadataValues;
+  sections: ContentSection[];
   mode: "create" | "edit";
   onChange: <K extends keyof ManagedContentMetadataValues>(
     field: K,
@@ -23,42 +27,14 @@ interface ManagedContentMetadataProps {
   ) => void;
 }
 
-const sectionOptions: {
-  value: ManagedContentSection;
-  label: string;
-}[] = [
-  {
-    value: "articles",
-    label: "Articles",
-  },
-  {
-    value: "bible-study",
-    label: "Bible Study",
-  },
-  {
-    value: "family",
-    label: "Family",
-  },
-  {
-    value: "health",
-    label: "Health",
-  },
-];
-
 export function ManagedContentMetadata({
   values,
+  sections,
   mode,
   onChange,
 }: ManagedContentMetadataProps) {
-  function handleSectionChange(
-    value: ManagedContentSection
-  ) {
-    onChange("section", value);
-
-    if (value === "articles") {
-      onChange("category", "");
-    }
-  }
+  const [isCustomSection, setIsCustomSection] = useState(false);
+  const [isCustomCategory, setIsCustomCategory] = useState(false);
 
   return (
     <div className="rounded-lg border border-gray-200 bg-white">
@@ -97,110 +73,180 @@ export function ManagedContentMetadata({
 
         <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
           <div>
-            <label
-              htmlFor="managed-content-section"
-              className="mb-1.5 block text-sm font-medium text-gray-700"
-            >
-              Section
-            </label>
+  <label
+    htmlFor="managed-content-section"
+    className="mb-1.5 block text-sm font-medium text-gray-700"
+  >
+    Section
+  </label>
 
-            <select
-              id="managed-content-section"
-              value={values.section}
-              onChange={(event) =>
-                handleSectionChange(
-                  event.target.value as ManagedContentSection
-                )
-              }
-              className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm outline-none transition focus:border-sam-blue focus:ring-2 focus:ring-sam-blue/20"
-            >
-              {sectionOptions.map((option) => (
-                <option
-                  key={option.value}
-                  value={option.value}
-                >
-                  {option.label}
-                </option>
-              ))}
-            </select>
-          </div>
+  {!isCustomSection ? (
+    <>
+      <select
+        id="managed-content-section"
+        value={values.section}
+        onChange={(event) => {
+  const value = event.target.value;
+
+  setIsCustomCategory(false);
+
+  if (value === "__custom__") {
+    setIsCustomSection(true);
+    onChange("section", "");
+    onChange("category", "");
+    return;
+  }
+
+  onChange("section", value);
+  onChange("category", "");
+}}
+        className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm outline-none transition focus:border-sam-blue focus:ring-2 focus:ring-sam-blue/20"
+      >
+        <option value="">Select section</option>
+
+        {sections.map((section) => (
+  <option key={section.slug} value={section.slug}>
+    {section.name}
+  </option>
+))}
+
+        <option value="__custom__">
+          + Add new section
+        </option>
+      </select>
+    </>
+  ) : (
+    <div className="space-y-2">
+      <input
+        id="managed-content-section"
+        type="text"
+        value={values.section}
+        onChange={(event) =>
+          onChange("section", event.target.value)
+        }
+        placeholder="e.g. Prophecy"
+        className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm outline-none transition focus:border-sam-blue focus:ring-2 focus:ring-sam-blue/20"
+      />
+
+      <button
+        type="button"
+        onClick={() => {
+          setIsCustomSection(false);
+          onChange("section", "");
+          onChange("category", "");
+        }}
+        className="text-xs font-medium text-sam-blue hover:underline"
+      >
+        ← Choose existing section
+      </button>
+    </div>
+  )}
+</div>
 
           <div>
-            <label
-              htmlFor="managed-content-category"
-              className="mb-1.5 block text-sm font-medium text-gray-700"
-            >
-              Category
-            </label>
+  <label
+    htmlFor="managed-content-category"
+    className="mb-1.5 block text-sm font-medium text-gray-700"
+  >
+    Category
+    {values.section !== "articles" && (
+      <span className="ml-1 text-red-500">*</span>
+    )}
+  </label>
 
-            <select
-              id="managed-content-category"
-              value={values.category}
-              onChange={(event) =>
-                onChange("category", event.target.value)
-              }
-              disabled={values.section === "articles"}
-              required={values.section !== "articles"}
-              className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm outline-none transition disabled:cursor-not-allowed disabled:bg-gray-100 disabled:text-gray-400 focus:border-sam-blue focus:ring-2 focus:ring-sam-blue/20"
-            >
-              <option value="">
-                {values.section === "articles"
-                  ? "Not applicable"
-                  : "Select category"}
-              </option>
+  {values.section === "articles" ? (
+    <p className="rounded-md border border-gray-200 bg-gray-50 px-3 py-2 text-sm text-gray-500">
+      Articles do not require a category.
+    </p>
+  ) : !isCustomCategory ? (
+    <>
+      <select
+        id="managed-content-category"
+        value={values.category}
+        onChange={(event) => {
+          const value = event.target.value;
 
-              {values.section === "bible-study" && (
-                <>
-                  <option value="redemption">
-                    Redemption
-                  </option>
-                  <option value="standards">
-                    Standards
-                  </option>
-                  <option value="the-law">
-                    The Law
-                  </option>
-                  <option value="the-sabbath">
-                    The Sabbath
-                  </option>
-                </>
-              )}
+          if (value === "__custom__") {
+            setIsCustomCategory(true);
+            onChange("category", "");
+            return;
+          }
 
-              {values.section === "family" && (
-                <>
-                  <option value="dating-courting">
-                    Dating & Courting
-                  </option>
-                  <option value="immorality">
-                    Immorality
-                  </option>
-                  <option value="marriage-purpose">
-                    Marriage & Purpose
-                  </option>
-                  <option value="relationships">
-                    Relationships
-                  </option>
-                </>
-              )}
+          onChange("category", value);
+        }}
+        disabled={!values.section}
+        required={Boolean(values.section)}
+        className="w-full rounded-md border border-gray-300 bg-white px-3 py-2 text-sm outline-none transition focus:border-sam-blue focus:ring-2 focus:ring-sam-blue/20 disabled:cursor-not-allowed disabled:bg-gray-100 disabled:text-gray-400"
+      >
+        <option value="">
+          {!values.section
+            ? "Select section first"
+            : "Select category"}
+        </option>
 
-              {values.section === "health" && (
-                <>
-                  <option value="bible-sop">
-                    Bible & SOP
-                  </option>
-                  <option value="junk-foods">
-                    Junk Foods
-                  </option>
-                  <option value="lifestyle-diseases">
-                    Lifestyle Diseases
-                  </option>
-                  <option value="truth">
-                    Truth
-                  </option>
-                </>
-              )}
-            </select>
-          </div>
+        {sections
+  .find((section) => section.slug === values.section)
+  ?.categories.map((category) => {
+    const isDefault = isDefaultContentCategory(
+      values.section,
+      category.slug
+    );
+
+    return (
+      <option
+        key={category.slug}
+        value={category.slug}
+        disabled={isDefault}
+      >
+        {category.name}
+        {isDefault ? " (Static content)" : ""}
+      </option>
+    );
+  })}
+
+        <option value="__custom__">
+          + Add new category
+        </option>
+      </select>
+
+      <p className="mt-1.5 text-xs text-gray-500">
+        Default categories contain static content. Create a new category
+        to add managed content under this section.
+      </p>
+    </>
+  ) : (
+    <div className="space-y-2">
+      <input
+        id="managed-content-category"
+        type="text"
+        value={values.category}
+        onChange={(event) =>
+  onChange("category", event.target.value)
+}
+        placeholder="e.g. Christian Parenting"
+        required
+        maxLength={100}
+        className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm outline-none transition focus:border-sam-blue focus:ring-2 focus:ring-sam-blue/20"
+      />
+
+      <button
+        type="button"
+        onClick={() => {
+          setIsCustomCategory(false);
+          onChange("category", "");
+        }}
+        className="text-xs font-medium text-sam-blue hover:underline"
+      >
+        ← Choose category
+      </button>
+
+      <p className="text-xs text-gray-500">
+        Enter a new category for this section. Its URL slug will be
+        generated from the category name by the application.
+      </p>
+    </div>
+  )}
+</div>
         </div>
 
         <div>
@@ -253,7 +299,37 @@ export function ManagedContentMetadata({
             Optional path or URL for the content hero image.
           </p>
         </div>
+        <div>
+  <label
+    htmlFor="managed-content-order"
+    className="mb-1.5 block text-sm font-medium text-gray-700"
+  >
+    Display Order
+  </label>
 
+  <input
+    id="managed-content-order"
+    type="number"
+    value={values.order ?? ""}
+    onChange={(event) => {
+      const value = event.target.value;
+
+      onChange(
+        "order",
+        value === "" ? undefined : Number(value)
+      );
+    }}
+    min={0}
+    step={1}
+    placeholder="e.g. 1"
+    className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm outline-none transition focus:border-sam-blue focus:ring-2 focus:ring-sam-blue/20 md:w-64"
+  />
+
+  <p className="mt-1.5 text-xs text-gray-500">
+    Optional. Lower numbers appear first. Items without an assigned
+    order follow explicitly ordered items.
+  </p>
+</div>
         {mode === "create" && (
           <div>
             <label

@@ -1,3 +1,5 @@
+"use client";
+
 import { useQuery } from "@tanstack/react-query";
 
 import {
@@ -5,17 +7,21 @@ import {
   type ManagedContentIdentifier,
 } from "@/src/lib/api/managedContent";
 
-import { managedContentKeys } from "./useManagedContentList";
-
 export function useManagedContent(
-  identifier: ManagedContentIdentifier
+  identifier: ManagedContentIdentifier | null
 ) {
   return useQuery({
     queryKey: [
-      ...managedContentKeys.all,
-      "detail",
+      "managed-content",
       identifier,
     ],
-    queryFn: () => getManagedContent(identifier),
+    queryFn: () => {
+      if (!identifier) {
+        throw new Error("Managed content identifier is required.");
+      }
+
+      return getManagedContent(identifier);
+    },
+    enabled: identifier !== null,
   });
 }

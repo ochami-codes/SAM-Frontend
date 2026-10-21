@@ -5,10 +5,12 @@ import Link from "next/link";
 import { Search, ArrowRight } from "lucide-react";
 import { useMemo, useState } from "react";
 
-import type { ArticleMeta } from "@/src/lib/content/getArticles";
+import type {
+  PublicContentListItem,
+} from "@/src/lib/content/getPublicContentList";
 
 interface ArticlesListProps {
-  articles: ArticleMeta[];
+  articles: PublicContentListItem[];
 }
 
 export default function ArticlesList({

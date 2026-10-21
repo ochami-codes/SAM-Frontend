@@ -14,7 +14,7 @@ import {
 import type { DataTableColumn } from "@/src/components/ui/DataTable";
 
 import { useManagedContentList } from "@/src/hooks/managed-content/useManagedContentList";
-
+import { ManagedContentActions } from "./ManagedContentActions";
 import { ManagedContentMobileCard } from "./ManagedContentMobileCard";
 import { ManagedContentStatus as ManagedContentStatusBadge } from "./ManagedContentStatus";
 
@@ -39,6 +39,9 @@ function formatSection(
 
     case "health":
       return "Health";
+
+    default:
+      return section;
   }
 }
 
@@ -149,22 +152,24 @@ export function ManagedContentList({
       render: (item) => formatDate(item.updatedAt),
     },
 
-    {
-      key: "actions",
-      header: "Actions",
-      headerClassName: "text-right",
-      className: "text-right",
-      render: (item) => (
-        <div className="flex justify-end">
-          <Link
-            href={getEditPath(item)}
-            className="inline-flex items-center rounded-md border border-gray-200 px-3 py-1.5 text-xs font-medium text-gray-700 transition hover:bg-gray-50"
-          >
-            Edit
-          </Link>
-        </div>
-      ),
-    },
+{
+  key: "actions",
+  header: "Actions",
+  headerClassName: "text-right",
+  className: "text-right",
+  render: (item) => (
+    <div className="flex justify-end gap-2">
+      <Link
+        href={getEditPath(item)}
+        className="inline-flex items-center rounded-md border border-gray-200 px-3 py-1.5 text-xs font-medium text-gray-700 transition hover:bg-gray-50"
+      >
+        Edit
+      </Link>
+
+      <ManagedContentActions item={item} />
+    </div>
+  ),
+},
   ];
 
   if (isLoading) {

@@ -21,7 +21,7 @@ export default async function ArticlePage({
     notFound();
   }
 
-  const navigation = getArticleNavigation("articles", article);
+  const navigation = await getArticleNavigation("articles", article);
 
   return (
     <ArticleLayout

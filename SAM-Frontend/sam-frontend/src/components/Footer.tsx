@@ -42,7 +42,7 @@ export default function Footer() {
 
 
       <p className="mt-2 text-xs">
-        "Fear God, and give glory to Him..." – Revelation 14:7
+        &quot;Fear God, and give glory to Him...&quot; – Revelation 14:7
       </p>
     </footer>
   );

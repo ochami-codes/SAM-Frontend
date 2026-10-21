@@ -26,7 +26,7 @@ export default function AdminLayout({
 
   return (
     <ProtectedRoutes>
-      <div className="min-h-screen bg-sam-background text-sam-text">
+      <div className="min-h-screen bg-sam-background text-sam-text lg:h-screen lg:overflow-hidden">
         {/* Sidebar */}
         <AdminSidebar
           role={role}
@@ -35,7 +35,7 @@ export default function AdminLayout({
         />
 
         {/* Main area */}
-        <div className="min-h-screen lg:ml-64">
+        <div className="flex min-h-screen flex-col lg:ml-64 lg:h-screen">
           {/* Header */}
           <AdminHeader
             role={role}
@@ -43,8 +43,8 @@ export default function AdminLayout({
             onMenuClick={() => setSidebarOpen(true)}
           />
 
-          {/* Page content */}
-          <main className="p-4 sm:p-6 lg:p-8">
+          {/* Scrollable page content */}
+          <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8">
             {children}
           </main>
         </div>

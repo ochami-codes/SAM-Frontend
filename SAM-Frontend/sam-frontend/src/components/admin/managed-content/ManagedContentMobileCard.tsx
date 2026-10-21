@@ -1,11 +1,12 @@
 import Link from "next/link";
 
-import { Eye, Pencil } from "lucide-react";
+import { Pencil } from "lucide-react";
 
 import type {
   ManagedContentListItem,
 } from "@/src/lib/api/managedContent";
 
+import { ManagedContentActions } from "./ManagedContentActions";
 import { ManagedContentStatus } from "./ManagedContentStatus";
 
 interface ManagedContentMobileCardProps {
@@ -18,12 +19,18 @@ function formatSection(
   switch (section) {
     case "articles":
       return "Articles";
+
     case "bible-study":
       return "Bible Study";
+
     case "family":
       return "Family";
+
     case "health":
       return "Health";
+
+    default:
+      return section;
   }
 }
 
@@ -106,17 +113,10 @@ export function ManagedContentMobileCard({
           Edit
         </Link>
 
-        <Link
-          href={getEditPath(item)}
-          className="inline-flex flex-1 items-center justify-center gap-1.5 rounded-md bg-sam-blue px-3 py-2 text-xs font-medium text-white transition hover:bg-sam-blue-dark"
-        >
-          <Eye
-            className="h-3.5 w-3.5"
-            aria-hidden="true"
-          />
-          View
-        </Link>
+        <div className="flex flex-1">
+          <ManagedContentActions item={item} />
+        </div>
       </div>
     </article>
   );
-}
+}                                 

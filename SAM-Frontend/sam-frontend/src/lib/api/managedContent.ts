@@ -1,10 +1,6 @@
 import { api } from "./client";
 
-export type ManagedContentSection =
-  | "articles"
-  | "bible-study"
-  | "family"
-  | "health";
+export type ManagedContentSection = string;
 
 export type ManagedContentStatus =
   | "draft"
@@ -27,7 +23,9 @@ export interface ManagedContentListItem {
   slug: string;
   section: ManagedContentSection;
   category?: string;
+  description?: string;
   heroImage?: string;
+  order?: number;
   status: ManagedContentStatus;
   publishedAt?: string;
   createdAt: string;
@@ -42,6 +40,7 @@ export interface ManagedContent {
   category?: string;
   content: string;
   heroImage?: string;
+  order?: number;
   status: ManagedContentStatus;
   createdBy: string;
   updatedBy: string;
@@ -57,6 +56,7 @@ export interface CreateManagedContentData {
   category?: string;
   content: string;
   heroImage?: string;
+  order?: number;
   status?: ManagedContentStatus;
 }
 
@@ -67,6 +67,7 @@ export interface UpdateManagedContentData {
   category?: string;
   content: string;
   heroImage?: string;
+  order?: number;
 }
 
 interface ApiResponse<T> {

@@ -4,24 +4,18 @@ import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import {
-  BookOpen,
-  HeartPulse,
   Home,
   Info,
   LogIn,
   Mail,
   Menu,
   Newspaper,
-  Users,
   X,
 } from "lucide-react";
 
 const navigation = [
   { name: "Home", href: "/", icon: Home },
   { name: "About", href: "/public/about", icon: Info },
-  { name: "Bible Study", href: "/public/bible-study", icon: BookOpen },
-  { name: "Health Corner", href: "/public/health", icon: HeartPulse },
-  { name: "Family Life Corner", href: "/public/family", icon: Users },
   { name: "Articles", href: "/public/articles", icon: Newspaper },
   { name: "Contacts", href: "/public/contacts", icon: Mail },
 ];
