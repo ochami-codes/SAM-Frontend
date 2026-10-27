@@ -1,5 +1,5 @@
 import { ApiError } from "../errors/ApiError";
-const API_URL = process.env.NEXT_PUBLIC_API_URL;
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://api.second-advent-ministries.co.ke';
 
 let accessToken: string | null = null;
 
