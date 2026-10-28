@@ -4,9 +4,13 @@ module.exports = {
   generateRobotsTxt: true,
   changefreq: 'weekly',
   priority: 0.7,
-  sitemapSize: 7000,
+  sitemapSize: 5000,
+  exclude: ['/admin*', '/api*', '/dashboard*'],
+  generateIndexSitemap: true,
   robotsTxtOptions: {
-    policies: [{ userAgent: "*", allow: "/" }],
-    additionalSitemaps: ['https://second-advent-ministries.co.ke/sitemap.xml']
+    policies: [
+      { userAgent: "*", allow: "/" }
+    ],
+    // Don't add additionalSitemaps - it was causing loop
   }
 }
