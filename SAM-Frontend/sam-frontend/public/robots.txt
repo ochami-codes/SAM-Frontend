@@ -1,0 +1,9 @@
+# *
+User-agent: *
+Allow: /
+
+# Host
+Host: https://second-advent-ministries.co.ke
+
+# Sitemaps
+Sitemap: https://second-advent-ministries.co.ke/sitemap.xml

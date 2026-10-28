@@ -1,6 +1,12 @@
 import PageLayout from "@/src/components/layouts/PageLayout";
 import { getPublicContentList } from "@/src/lib/content/getPublicContentList";
 import ArticlesList from "./ArticlesList";
+import type { Metadata } from "next";
+import { seo } from "@/src/app/seo";
+export const metadata: Metadata = {
+  title: seo.articles.title,
+  description: seo.articles.description,
+};
 
 export default async function ArticlesPage() {
   const articles = await getPublicContentList({section:"articles"});

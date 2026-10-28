@@ -1,13 +1,16 @@
 export interface ContentCategory {
-  name: string;
-  slug: string;
+name: string;
+slug: string;
+heroImage?: string;
 }
 
 export interface ContentSection {
-  name: string;
-  slug: string;
-  categories: ContentCategory[];
+name: string;
+slug: string;
+heroImage?: string;
+categories: ContentCategory[];
 }
+
 
 export const DEFAULT_CONTENT_METADATA: ContentSection[] = [
   {

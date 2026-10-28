@@ -2,6 +2,12 @@ import Header from "@/src/components/Header";
 import Footer from "@/src/components/Footer";
 import ContactForm from "@/src/components/forms/ContactForm";
 import Card from "@/src/components/ui/Card";
+import type { Metadata } from "next";
+import { seo } from "@/src/app/seo";
+export const metadata: Metadata = {
+  title: seo.contact.title,
+  description: seo.contact.description,
+};
 
 export default function ContactPage() {
   return (

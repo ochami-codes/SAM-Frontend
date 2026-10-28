@@ -1,6 +1,12 @@
 import Header from "@/src/components/Header";
 import Footer from "@/src/components/Footer";
 import Card from "@/src/components/ui/Card";
+import type { Metadata } from "next";
+import { seo } from "@/src/app/seo";
+export const metadata: Metadata = {
+  title: seo.about.title,
+  description: seo.about.description,
+};
 
 export default function AboutPage() {
   return (
