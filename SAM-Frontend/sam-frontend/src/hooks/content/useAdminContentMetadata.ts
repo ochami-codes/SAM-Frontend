@@ -1,100 +1,65 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-
-import {
-DEFAULT_CONTENT_METADATA,
-} from "@/src/config/contentMetadata";
-
-import {
-fetchPublishedContentMetadata,
-} from "@/src/lib/api/contentMetadata";
+import { DEFAULT_CONTENT_METADATA } from "@/src/config/contentMetadata";
+import { fetchAllContentMetadata } from "@/src/lib/api/contentMetadata";
 
 export function useAdminContentMetadata() {
-return useQuery({
-queryKey: ["admin-content-metadata"],
+  return useQuery({
+    queryKey: ["admin-content-metadata"],
+    staleTime: 5 * 60 * 1000,
+    queryFn: async () => {
+      // Fetch all custom metadata, including unpublished sections
+      const managed = await fetchAllContentMetadata();
 
-queryFn: async () => {
-  const managed = await fetchPublishedContentMetadata();
+      // Clone default sections
+      const sections = DEFAULT_CONTENT_METADATA.map((section) => ({
+        ...section,
+        categories: section.categories.map((category) => ({ ...category })),
+      }));
 
-  const sections = DEFAULT_CONTENT_METADATA.map(
-    (section) => ({
-      ...section,
-      categories: section.categories.map(
-        (category) => ({ ...category })
-      ),
-    })
-  );
+      // Merge custom sections & categories
+      for (const managedSection of managed) {
+        const slug = managedSection.slug.trim().toLowerCase();
+        if (!slug) continue;
 
-  for (const managedSection of managed.sections) {
-    const slug = managedSection.slug.trim().toLowerCase();
+        let section = sections.find(
+          (item) => item.slug.trim().toLowerCase() === slug
+        );
 
-    if (
-      !slug ||
-      sections.some(
-        (section) =>
-          section.slug.trim().toLowerCase() === slug
-      )
-    ) {
-      continue;
-    }
+        if (!section) {
+          section = {
+            name: managedSection.name,
+            slug,
+            ...(managedSection.heroImage
+              ? { heroImage: managedSection.heroImage }
+              : {}),
+            categories: [],
+          };
+          sections.push(section);
+        }
 
-    sections.push({
-      name: managedSection.name,
-      slug,
-      categories: [],
-    });
-  }
+        // Merge categories into section (default or custom)
+        for (const category of managedSection.categories) {
+          const categorySlug = category.slug.trim().toLowerCase();
+          if (
+            !categorySlug ||
+            section.categories.some(
+              (item) => item.slug.trim().toLowerCase() === categorySlug
+            )
+          ) {
+            continue;
+          }
 
-  for (const group of managed.categories) {
-    const sectionSlug = group.section.trim().toLowerCase();
-
-    let section = sections.find(
-      (item) =>
-        item.slug.trim().toLowerCase() === sectionSlug
-    );
-
-    if (!section) {
-      section = {
-        name: sectionSlug
-          .split("-")
-          .map(
-            (word) =>
-              word.charAt(0).toUpperCase() +
-              word.slice(1)
-          )
-          .join(" "),
-        slug: sectionSlug,
-        categories: [],
-      };
-
-      sections.push(section);
-    }
-
-    for (const category of group.categories) {
-      const slug = category.slug.trim().toLowerCase();
-
-      if (
-        !slug ||
-        section.categories.some(
-          (item) =>
-            item.slug.trim().toLowerCase() === slug
-        )
-      ) {
-        continue;
+          section.categories.push({
+            name: category.name,
+            slug: categorySlug,
+            ...(category.heroImage ? { heroImage: category.heroImage } : {}),
+          });
+        }
       }
 
-      section.categories.push({
-        name: category.name,
-        slug,
-      });
-    }
-  }
-
-  return sections;
-},
-
-staleTime: 5 * 60 * 1000,
-
-});
+      return sections;
+    },
+  });
 }

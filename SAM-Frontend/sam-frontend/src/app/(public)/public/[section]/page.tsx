@@ -58,32 +58,71 @@ export default async function SectionPage({ params }: SectionPageProps) {
   if (!section) {
     notFound();
   }
+console.log("Section metadata:", {
+  name: section.name,
+  slug: section.slug,
+  heroImage: section.heroImage,
+});
 
+console.log(
+  "Category metadata:",
+  section.categories.map(({ name, slug, heroImage }) => ({
+    name,
+    slug,
+    heroImage,
+  }))
+);
   const config = publicSections[section.slug];
   const title = config?.title ?? section.name;
-  const heroImage = config?.heroImage ?? DEFAULT_SECTION_IMAGE;
+  const heroImage =
+  section.heroImage ??
+  config?.heroImage ??
+  DEFAULT_SECTION_IMAGE;
 
-  const getCategoryImage = (slug: string, name: string) => {
-    switch (section.slug) {
-      case "bible-study":
-        return {
-          image: BIBLE_STUDY_IMAGES[slug]?.image ?? DEFAULT_BIBLE_STUDY_IMAGE,
-          alt: BIBLE_STUDY_IMAGES[slug]?.alt ?? name,
-        };
-      case "health":
-        return {
-          image: HEALTH_IMAGES[slug]?.image ?? DEFAULT_HEALTH_IMAGE,
-          alt: HEALTH_IMAGES[slug]?.alt ?? name,
-        };
-      case "family":
-        return {
-          image: FAMILY_IMAGES[slug]?.image ?? DEFAULT_FAMILY_IMAGE,
-          alt: FAMILY_IMAGES[slug]?.alt ?? name,
-        };
-      default:
-        return { image: DEFAULT_SECTION_IMAGE, alt: name };
-    }
-  };
+  const getCategoryImage = (
+  slug: string,
+  name: string,
+  heroImage?: string
+) => {
+  if (heroImage) {
+    return {
+      image: heroImage,
+      alt: name,
+    };
+  }
+
+  switch (section.slug) {
+    case "bible-study":
+      return {
+        image:
+          BIBLE_STUDY_IMAGES[slug]?.image ??
+          DEFAULT_BIBLE_STUDY_IMAGE,
+        alt: BIBLE_STUDY_IMAGES[slug]?.alt ?? name,
+      };
+
+    case "health":
+      return {
+        image:
+          HEALTH_IMAGES[slug]?.image ??
+          DEFAULT_HEALTH_IMAGE,
+        alt: HEALTH_IMAGES[slug]?.alt ?? name,
+      };
+
+    case "family":
+      return {
+        image:
+          FAMILY_IMAGES[slug]?.image ??
+          DEFAULT_FAMILY_IMAGE,
+        alt: FAMILY_IMAGES[slug]?.alt ?? name,
+      };
+
+    default:
+      return {
+        image: DEFAULT_SECTION_IMAGE,
+        alt: name,
+      };
+  }
+};
 
   return (
     <PageLayout title={title} heroImage={heroImage} theme={config?.theme} subtitle={config?.subtitle}>
@@ -94,8 +133,12 @@ export default async function SectionPage({ params }: SectionPageProps) {
 
         {section.categories.length > 0 || section.slug === "health" ? (
           <div className="grid grid-cols-1 justify-items-center gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {section.categories.map(({ name, slug }) => {
-              const categoryImage = getCategoryImage(slug, name);
+            {section.categories.map(({ name, slug, heroImage }) => {
+  const categoryImage = getCategoryImage(
+    slug,
+    name,
+    heroImage
+  );
               return (
                 <Link key={slug} href={`/public/${section.slug}/${slug}`} className="group w-full max-w-[280px]">
                   <Card>

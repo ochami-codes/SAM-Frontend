@@ -1,5 +1,3 @@
-// src/components/layouts/AdminLayout.tsx
-
 "use client";
 
 import { useState } from "react";
@@ -26,7 +24,7 @@ export default function AdminLayout({
 
   return (
     <ProtectedRoutes>
-      <div className="min-h-screen bg-sam-background text-sam-text lg:h-screen lg:overflow-hidden">
+      <div className="flex h-dvh min-h-screen overflow-hidden bg-sam-background text-sam-text">
         {/* Sidebar */}
         <AdminSidebar
           role={role}
@@ -34,18 +32,22 @@ export default function AdminLayout({
           onClose={() => setSidebarOpen(false)}
         />
 
-        {/* Main area */}
-        <div className="flex min-h-screen flex-col lg:ml-64 lg:h-screen">
-          {/* Header */}
-          <AdminHeader
-            role={role}
-            name={name}
-            onMenuClick={() => setSidebarOpen(true)}
-          />
+        {/* Main area - takes rest of width */}
+        <div className="flex min-w-0 flex-1 flex-col overflow-hidden lg:ml-5">
+          {/* Header - fixed height, never scrolls */}
+          <div className="shrink-0">
+            <AdminHeader
+              role={role}
+              name={name}
+              onMenuClick={() => setSidebarOpen(true)}
+            />
+          </div>
 
-          {/* Scrollable page content */}
-          <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8">
-            {children}
+          {/* Scrollable content ONLY - header stays on top without overshadowing */}
+          <main className="flex-1 overflow-y-auto overflow-x-hidden p-4 sm:p-6 lg:p-8">
+            <div className="mx-auto w-full max-w-7xl">
+              {children}
+            </div>
           </main>
         </div>
       </div>

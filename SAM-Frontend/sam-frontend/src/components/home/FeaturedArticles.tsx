@@ -26,12 +26,12 @@ imageAlt: "An open Bible representing a personal walk with God",
 href: "/public/articles/never-knew-you",
 },
 {
-title: "Almost Saved, Eternally Lost",
+title: "Even the Monkeys Kept the Sabbath",
 description:
-"Consider the tragic story of Guonzou and discover why responding to God's invitation matters today.",
-image: "/images/articles/almost.jpg",
-imageAlt: "A reflective scene representing the urgency of spiritual decisions",
-href: "/public/articles/almost-saved",
+"A testimony from Mozambique shows how God honors obedience to His Sabbath, even protecting farms from monkeys.",
+image: "/images/articles/sunset.png",
+imageAlt: "A sundown scene representing Sabbath beginning",
+href: "/public/articles/monkey",
 },
 ];
 

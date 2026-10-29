@@ -12,59 +12,59 @@ import { getArticleNavigation } from "@/src/lib/content/getArticleNavigation";
 type StudyTheme = "bible" | "health" | "family";
 
 const sectionThemes: Record<string, StudyTheme> = {
-"bible-study": "bible",
-health: "health",
-family: "family",
+  "bible-study": "bible",
+  health: "health",
+  family: "family",
 };
 
 export default async function ArticlePage({
-params,
+  params,
 }: {
-params: Promise<{
-section: string;
-category: string;
-article: string;
-}>;
+  params: Promise<{
+    section: string;
+    category: string;
+    article: string;
+  }>;
 }) {
-const { section, category, article } = await params;
+  const { section, category, article } = await params;
 
-const theme = sectionThemes[section];
+  const normalizedSection = section.trim().toLowerCase();
+  const normalizedCategory = category.trim().toLowerCase();
+  const normalizedArticle = article.trim().toLowerCase();
 
-// Only sections supported by StudyLayout are valid here.
-if (!theme) {
-notFound();
-}
+  const theme = sectionThemes[normalizedSection] ?? "bible";
 
-const content = await getArticle(
-section as ManagedContentSection,
-category,
-article
-);
+  const content = await getArticle(
+    normalizedSection as ManagedContentSection,
+    normalizedCategory,
+    normalizedArticle,
+  );
 
-if (!content) {
-notFound();
-}
+  if (!content) {
+    notFound();
+  }
 
-const navigation = await getArticleNavigation(
-section,
-category,
-article
-);
+  const navigation = await getArticleNavigation(
+    normalizedSection,
+    normalizedCategory,
+    normalizedArticle,
+  );
 
-return (
-<StudyLayout
-title={content.title ?? ""}
-heroImage={content.heroImage ?? ""}
-theme={theme}
-previous={navigation.previous}
-next={navigation.next}
->
-<MDXRemote
-source={content.source}
-components={{
-Quote,
-PrayerRequestForm,
-}}
-/> </StudyLayout>
-);
+  return (
+    <StudyLayout
+      title={content.title ?? ""}
+      heroImage={content.heroImage ?? ""}
+      theme={theme}
+      previous={navigation.previous}
+      next={navigation.next}
+    >
+      <MDXRemote
+        source={content.source}
+        components={{
+          Quote,
+          PrayerRequestForm,
+        }}
+      />
+    </StudyLayout>
+  );
 }

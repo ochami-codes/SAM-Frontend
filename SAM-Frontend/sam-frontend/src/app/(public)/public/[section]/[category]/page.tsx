@@ -5,73 +5,93 @@ import StudyIndexList from "@/src/components/content/StudyIndexList";
 
 import type { ManagedContentSection } from "@/src/lib/api/managedContent";
 import { getPublicContentList } from "@/src/lib/content/getPublicContentList";
+import { getPublicContentMetadata } from "@/src/lib/content/getPublicContentMetadata";
 import { contentCategoryMetadata } from "@/src/config/contentCategoryMetadata";
 
 type StudyTheme = "bible" | "health" | "family";
 
 const sectionThemes: Record<string, StudyTheme> = {
-"bible-study": "bible",
-health: "health",
-family: "family",
+  "bible-study": "bible",
+  health: "health",
+  family: "family",
 };
 
 function formatCategoryTitle(category: string): string {
-return category
-.split("-")
-.filter(Boolean)
-.map(
-(word) =>
-word.charAt(0).toUpperCase() + word.slice(1)
-)
-.join(" ");
+  return category
+    .split("-")
+    .filter(Boolean)
+    .map((word) => word.charAt(0).toUpperCase() + word.slice(1))
+    .join(" ");
 }
 
 function getDefaultHeroImage(section: string): string {
-return `/images/${section}/default.jpg`;
+  return `/images/${section}/default.jpg`;
 }
 
 export default async function CategoryPage({
-params,
+  params,
 }: {
-params: Promise<{
-section: string;
-category: string;
-}>;
+  params: Promise<{
+    section: string;
+    category: string;
+  }>;
 }) {
-const { section, category } = await params;
+  const { section, category } = await params;
 
-const theme = sectionThemes[section];
+  const normalizedSection = section.trim().toLowerCase();
+  const normalizedCategory = category.trim().toLowerCase();
 
-if (!theme) {
-notFound();
-}
+  const [publicMetadata, studies] = await Promise.all([
+    getPublicContentMetadata(),
+    getPublicContentList({
+      section: normalizedSection as ManagedContentSection,
+      category: normalizedCategory,
+    }),
+  ]);
 
-const metadata = contentCategoryMetadata[section]?.[category];
+  const sectionMetadata = publicMetadata.find(
+    (item) => item.slug.trim().toLowerCase() === normalizedSection,
+  );
 
-const studies = await getPublicContentList({
-section: section as ManagedContentSection,
-category,
-});
+  const managedCategory = sectionMetadata?.categories.find(
+    (item) => item.slug.trim().toLowerCase() === normalizedCategory,
+  );
 
-// Unknown categories without published content are not valid pages.
-if (!metadata && studies.length === 0) {
-notFound();
-}
+  const staticMetadata =
+    contentCategoryMetadata[normalizedSection]?.[normalizedCategory];
 
-const title = metadata?.title ?? formatCategoryTitle(category);
-const heroImage =
-metadata?.heroImage ?? getDefaultHeroImage(section);
+  // Only render categories that exist in metadata or have published content.
+  if (!managedCategory && !staticMetadata && studies.length === 0) {
+    notFound();
+  }
 
-return (
-<StudyIndexLayout
-title={title}
-heroImage={heroImage}
-theme={metadata?.theme ?? theme}
-heroQuote={metadata?.heroQuote}
-> <StudyIndexList
-     studies={studies}
-     section={section}
-     category={category}
-   /> </StudyIndexLayout>
-);
+  const title =
+    staticMetadata?.title ??
+    managedCategory?.name ??
+    formatCategoryTitle(normalizedCategory);
+
+  const heroImage =
+    managedCategory?.heroImage ??
+    staticMetadata?.heroImage ??
+    getDefaultHeroImage(normalizedSection);
+
+  // Preserve built-in themes and use the Bible theme for custom sections.
+  const categoryTheme = staticMetadata?.theme ??
+    sectionThemes[normalizedSection] ??
+    "bible";
+
+  return (
+    <StudyIndexLayout
+      title={title}
+      heroImage={heroImage}
+      theme={categoryTheme}
+      heroQuote={staticMetadata?.heroQuote}
+    >
+      <StudyIndexList
+        studies={studies}
+        section={normalizedSection}
+        category={normalizedCategory}
+      />
+    </StudyIndexLayout>
+  );
 }

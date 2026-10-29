@@ -17,12 +17,20 @@ export interface ManagedContentMetadata {
   }[];
 }
 
-/** Admin metadata response */
-export interface AdminContentMetadataSection
-  extends ContentMetadataItem {
-  categories: ContentMetadataItem[];
+/** Admin metadata item */
+export interface AdminContentMetadataItem {
+  name: string;
+  slug: string;
+  heroImage?: string;
 }
 
+/** Admin section with its associated categories */
+export interface AdminContentMetadataSection
+  extends AdminContentMetadataItem {
+  categories: AdminContentMetadataItem[];
+}
+
+/** Input for creating a section or category */
 export interface CreateContentMetadataInput {
   name: string;
   type: "section" | "category";
@@ -30,6 +38,7 @@ export interface CreateContentMetadataInput {
   heroImage?: string;
 }
 
+/** Input for updating a section or category */
 export interface UpdateContentMetadataInput {
   name?: string;
   heroImage?: string | null;
@@ -63,12 +72,12 @@ export async function fetchAllContentMetadata(): Promise<
 > {
   const response = await api<
     MetadataApiResponse<AdminContentMetadataSection[]>
-  >("/api/managed-content/metadata", {
+  >("/api/admin/managed-content/metadata", {
     method: "GET",
   });
 
   if (!response.success || !response.data) {
-    throw new Error("Invalid admin content metadata response.");
+    throw new Error("Failed to fetch admin content metadata.");
   }
 
   return response.data;
@@ -76,9 +85,9 @@ export async function fetchAllContentMetadata(): Promise<
 
 export async function createContentMetadata(
   input: CreateContentMetadataInput
-): Promise<AdminContentMetadataSection> {
+): Promise<AdminContentMetadataItem> {
   const response = await api<
-    MetadataApiResponse<AdminContentMetadataSection>
+    MetadataApiResponse<AdminContentMetadataItem>
   >("/api/admin/managed-content/metadata", {
     method: "POST",
     body: JSON.stringify(input),
