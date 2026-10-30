@@ -6,7 +6,7 @@ import type {
 } from "@/src/lib/api/managedContent";
 
 import type { ContentSection } from "@/src/config/contentMetadata";
-
+import { ContentDescriptionField } from "./metadata/ContentDescriptionField";
 import { ContentHeroImageField } from "./metadata/ContentHeroImageField";
 import { ContentOrderField } from "./metadata/ContentOrderField";
 import { ContentSectionField } from "./metadata/ContentSectionField";
@@ -20,6 +20,7 @@ export interface ManagedContentMetadataValues {
   slug: string;
   section: ManagedContentSection;
   category: string;
+  description: string;
   heroImage: string;
   order?: number;
   status: ManagedContentStatus;
@@ -57,11 +58,19 @@ export function ManagedContentMetadata({
 
         <div className="space-y-5 p-5">
           <ContentTitleField
-            value={values.title}
-            onChange={(value: string) =>
-              onChange("title", value)
-            }
-          />
+  value={values.title}
+  onChange={(value: string) =>
+    onChange("title", value)
+  }
+/>
+
+<ContentDescriptionField
+  section={values.section}
+  value={values.description}
+  onChange={(value: string) =>
+    onChange("description", value)
+  }
+/>
 
           <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
             <ContentSectionField

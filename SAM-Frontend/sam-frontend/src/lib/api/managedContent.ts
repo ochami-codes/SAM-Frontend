@@ -38,6 +38,7 @@ export interface ManagedContent {
   slug: string;
   section: ManagedContentSection;
   category?: string;
+  description?: string;
   content: string;
   heroImage?: string;
   order?: number;
