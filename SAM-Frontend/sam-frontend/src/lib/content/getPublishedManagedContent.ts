@@ -36,15 +36,15 @@ return null;
 }
 
 try {
-const endpoint = [
-"api",
-"content",
-section,
-category,
-slug,
-]
-.map(encodeURIComponent)
-.join("/");
+const segments = ["api", "content", section];
+
+if (category.trim()) {
+  segments.push(category);
+}
+
+segments.push(slug);
+
+const endpoint = segments.map(encodeURIComponent).join("/");
 
 const response = await fetch(`${API_URL}/${endpoint}`, {
   method: "GET",
