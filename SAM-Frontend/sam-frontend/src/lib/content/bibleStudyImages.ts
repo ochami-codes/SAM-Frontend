@@ -8,7 +8,7 @@ export const BIBLE_STUDY_IMAGES: Record<
   BibleStudyImage
 > = {
   redemption: {
-    image: "/images/bible-study/redemption~2.jpg",
+    image: "/images/bible-study/jesus_cross.jpg",
     alt: "The Story of Redemption",
   },
   "the-law": {
