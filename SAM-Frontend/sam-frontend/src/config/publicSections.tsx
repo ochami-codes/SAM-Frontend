@@ -43,7 +43,7 @@ health: {
 title: "Health Corner",
 description:
 "Discover practical health principles and biblical guidance for a healthier, more balanced life.",
-heroImage: "/images/health/eden.png",
+heroImage: "/images/health/health_corner.jpg",
 theme: "health",
 subtitle: ( <em>
 "Beloved, I wish above all things that thou mayest
@@ -53,7 +53,7 @@ features: [
 {
 title: "Health Checker Tools",
 href: "/public/health/health-checker",
-image: "/images/health/health-tools.jpg",
+image: "/images/health/health_checker.jpg",
 alt: "Health assessment tools",
 },
 ],
