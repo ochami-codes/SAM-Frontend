@@ -9,20 +9,20 @@ export const HEALTH_IMAGES: Record<string, HealthImage> = {
     alt: "Bible and Spirit of Prophecy",
   },
   truth: {
-    image: "/images/health/research.png",
+    image: "/images/health/proteins_carbs_fats.jpg",
     alt: "Scientific research on nutrition",
   },
   "lifestyle-diseases": {
-    image: "/images/health/glucometer.jpg",
+    image: "/images/health/lifestyle_diseases.jpg",
     alt: "Blood glucose testing",
   },
   "junk-foods": {
-    image: "/images/health/junk.jpg",
+    image: "/images/health/harmful_foods.jpg",
     alt: "Junk foods",
   },
 };
 
 export const DEFAULT_HEALTH_IMAGE = {
-  image: "/images/health/eden.png",
+  image: "/images/health/health_corner.jpg",
   alt: "Health and wellness",
 };
