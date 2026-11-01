@@ -18,7 +18,7 @@ interface SectionPageProps {
 const HEALTH_CHECKER = {
   title: "Health Checker Tools",
   href: "/public/health/health-checker",
-  image: "/images/health/health-tools.jpg",
+  image: "/images/health/health_checker.jpg",
   alt: "Health assessment tools",
 };
 
