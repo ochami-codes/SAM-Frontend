@@ -65,7 +65,7 @@ export default function HealthCheckerPage() {
           <div className="relative mx-auto w-full max-w-lg">
             <div className="overflow-hidden rounded-3xl bg-white/10 p-2 shadow-2xl backdrop-blur">
               <Image
-                src="/images/health/health-tools.jpg"
+                src="/images/health/health_checker.jpg"
                 alt="Health assessment"
                 width={800}
                 height={550}

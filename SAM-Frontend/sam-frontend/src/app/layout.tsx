@@ -15,18 +15,45 @@ export const metadata: Metadata = {
   keywords: ["Second Advent Ministries", "SAM online ministry", "online bible study", "Bible prophecy", "Second Coming of Jesus", "Adventist online evangelism"],
   authors: [{ name: "Second Advent Ministries" }],
   creator: "Second Advent Ministries",
+  
+  // FAVICON SETUP
+  icons: {
+    icon: [
+      { url: "/favicon.ico" },
+      { url: "/favicon-16x16.png", sizes: "16x16", type: "image/png" },
+      { url: "/favicon-32x32.png", sizes: "32x32", type: "image/png" },
+    ],
+    apple: [
+      { url: "/apple-touch-icon.png", sizes: "180x180", type: "image/png" },
+    ],
+    other: [
+      {
+        rel: "mask-icon",
+        url: "/safari-pinned-tab.svg",
+      },
+    ],
+  },
+  manifest: "/site.webmanifest",
+
   openGraph: {
     type: "website",
     url: "https://second-advent-ministries.co.ke",
     title: seo.home.title,
     description: seo.home.description,
     siteName: "Second Advent Ministries",
+    images: [
+      {
+        url: "/og-image.png", // create a 1200x630 image for sharing
+        width: 1200,
+        height: 630,
+        alt: "Second Advent Ministries",
+      },
+    ],
   },
   robots: {
     index: true,
     follow: true,
   },
-  // Important: tells Google you are online-only
   other: {
     "google-site-verification": "ADD_YOURS_LATER_FROM_SEARCH_CONSOLE",
   }

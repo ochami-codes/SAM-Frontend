@@ -15,7 +15,7 @@ export const contentCategoryMetadata: CategoryMetadataMap = {
   "bible-study": {
     redemption: {
       title: "The Story of Redemption",
-      heroImage: "/images/bible-study/redemption~2.jpg",
+      heroImage: "/images/bible-study/jesus_cross.jpg",
       theme: "bible",
       heroQuote: (
         <>
@@ -78,7 +78,7 @@ export const contentCategoryMetadata: CategoryMetadataMap = {
     },
     "junk-foods": {
       title: "Junk and Harmful Food Articles",
-      heroImage: "/images/health/junk.jpg",
+      heroImage: "/images/health/harmful_foods.jpg",
       theme: "health",
       heroQuote: (
         <>
@@ -91,7 +91,7 @@ export const contentCategoryMetadata: CategoryMetadataMap = {
     },
     "lifestyle-diseases": {
       title: "Lifestyle Diseases",
-      heroImage: "/images/health/glucometer.jpg",
+      heroImage: "/images/health/lifestyle_diseases.jpg",
       theme: "health",
       heroQuote: (
         <>
@@ -104,7 +104,7 @@ export const contentCategoryMetadata: CategoryMetadataMap = {
     },
     truth: {
       title: "The Truth About Proteins, Fats and Carbohydrates",
-      heroImage: "/images/health/research.png",
+      heroImage: "/images/health/proteins_carbs_fats.jpg",
       theme: "health",
       heroQuote: (
         <>

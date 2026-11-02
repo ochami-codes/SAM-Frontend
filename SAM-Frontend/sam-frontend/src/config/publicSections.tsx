@@ -51,7 +51,7 @@ export const publicSections: Record<
     title: "Health Corner",
     description:
       "Discover practical health principles and biblical guidance for a healthier, more balanced life.",
-    heroImage: "/images/health/eden.png",
+    heroImage: "/images/health/health_corner.jpg",
     theme: "health",
     subtitle: (
       <em>

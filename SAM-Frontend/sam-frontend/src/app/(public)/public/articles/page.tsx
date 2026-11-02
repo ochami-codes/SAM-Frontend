@@ -14,7 +14,7 @@ export default async function ArticlesPage() {
   return (
     <PageLayout
       title="Devotional Articles"
-      heroImage="/images/bible-study/bible-light.jpg"
+      heroImage="/images/articles/articles.jpg"
       theme="default"
       subtitle={
         <em>
