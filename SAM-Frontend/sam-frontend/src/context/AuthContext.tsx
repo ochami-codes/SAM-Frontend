@@ -23,6 +23,7 @@ import {
 export type UserRole = "super_admin" | "admin";
 
 export interface AuthUser {
+  fullName: string;
   id: string;
   email: string;
   role: UserRole;

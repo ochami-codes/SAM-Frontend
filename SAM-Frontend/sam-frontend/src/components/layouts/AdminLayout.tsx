@@ -37,8 +37,6 @@ export default function AdminLayout({
           {/* Header - fixed height, never scrolls */}
           <div className="shrink-0">
             <AdminHeader
-              role={role}
-              name={name}
               onMenuClick={() => setSidebarOpen(true)}
             />
           </div>

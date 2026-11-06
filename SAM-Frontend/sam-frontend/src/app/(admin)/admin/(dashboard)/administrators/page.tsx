@@ -5,30 +5,30 @@ import { useState } from "react";
 import Button from "@/src/components/ui/Button";
 
 import InviteAdministratorForm from "@/src/components/admin/administrators/InviteAdministratorForm";
-import AdministratorsSection from "@/src//components/admin/administrators/AdministratorsSection";
-import PendingInvitationsSection from "@/src//components/admin/administrators/PendingInvitationsSection";
+import AdministratorsSection from "@/src/components/admin/administrators/AdministratorsSection";
+import PendingInvitationsSection from "@/src/components/admin/administrators/PendingInvitationsSection";
 
-import type {
-  Administrator,
-  PendingInvitation,
-} from "@/src/types/administrator";
-
-// Temporary data until the API integration is implemented.
-const administrators: Administrator[] = [
-  {
-    id: "1",
-    email: "admin@example.com",
-    isActive: true,
-    fullName: "John Doe",
-    role: "admin",
-    createdAt: "September 1, 2026",
-  },
-];
-
-const pendingInvitations: PendingInvitation[] = [];
+import { useAdministrators } from "@/src/hooks/admin/useAdministrators";
+import { useAdminInvitations } from "@/src/hooks/admin/useAdminInvitations";
 
 export default function AdministratorsPage() {
   const [showInviteForm, setShowInviteForm] = useState(false);
+
+  const {
+    data: administrators = [],
+    isLoading: administratorsLoading,
+    isError: administratorsError,
+    refetch: refetchAdministrators,
+  } = useAdministrators();
+
+  const {
+    data: invitations = [],
+    isLoading: invitationsLoading,
+    isError: invitationsError,
+    refetch: refetchInvitations,
+  } = useAdminInvitations();
+
+  const isLoading = administratorsLoading || invitationsLoading;
 
   return (
     <div className="space-y-10">
@@ -57,9 +57,53 @@ export default function AdministratorsPage() {
         />
       )}
 
-      <AdministratorsSection administrators={administrators} />
+      {isLoading ? (
+        <div className="rounded-2xl border border-sam-border bg-white p-8 text-center">
+          <p className="text-sm text-sam-muted">
+            Loading administrator information...
+          </p>
+        </div>
+      ) : (
+        <>
+          {administratorsError ? (
+            <div className="rounded-2xl border border-red-200 bg-white p-6">
+              <p className="text-sm text-red-600">
+                Unable to load administrators.
+              </p>
 
-      <PendingInvitationsSection invitations={pendingInvitations} />
+              <Button
+                type="button"
+                variant="secondary"
+                className="mt-3"
+                onClick={() => refetchAdministrators()}
+              >
+                Retry
+              </Button>
+            </div>
+          ) : (
+            <AdministratorsSection administrators={administrators} />
+          )}
+
+          {invitationsError ? (
+            <div className="rounded-2xl border border-red-200 bg-white p-6">
+              <p className="text-sm text-red-600">
+                Unable to load pending invitations.
+              </p>
+
+              <Button
+                type="button"
+                variant="secondary"
+                className="mt-3"
+                onClick={() => refetchInvitations()}
+              >
+                Retry
+              </Button>
+            </div>
+          ) : (
+            <PendingInvitationsSection invitations={invitations} />
+          )}
+        </>
+      )}
     </div>
   );
 }

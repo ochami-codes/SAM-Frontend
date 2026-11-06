@@ -72,6 +72,12 @@ export default function PendingInvitationsSection({
                     {invitation.email}
                   </p>
 
+                  {invitation.invitedBy && (
+                    <p className="mt-1 text-xs text-sam-muted">
+                      Invited by {invitation.invitedBy.fullName}
+                    </p>
+                  )}
+
                   <p className="mt-2 text-xs text-sam-muted">
                     Expires {formatDate(invitation.expiresAt)}
                   </p>
@@ -81,7 +87,9 @@ export default function PendingInvitationsSection({
                   <Button
                     type="button"
                     variant="secondary"
-                    disabled={resendMutation.isPending || cancelMutation.isPending}
+                    disabled={
+                      resendMutation.isPending || cancelMutation.isPending
+                    }
                     onClick={() => resendMutation.mutate(invitation.id)}
                   >
                     {resendMutation.isPending ? "Resending..." : "Resend"}
@@ -90,7 +98,9 @@ export default function PendingInvitationsSection({
                   <Button
                     type="button"
                     variant="secondary"
-                    disabled={resendMutation.isPending || cancelMutation.isPending}
+                    disabled={
+                      resendMutation.isPending || cancelMutation.isPending
+                    }
                     onClick={() => handleCancel(invitation)}
                   >
                     {cancelMutation.isPending ? "Cancelling..." : "Cancel"}

@@ -1,7 +1,7 @@
 import "server-only";
 
 import type { ManagedContentSection } from "@/src/lib/api/managedContent";
-
+import { sortContentByOrder } from "@/src/utils/sortContentByOrder";
 import { getStaticContentList } from "./getStaticContentList";
 import { getPublishedManagedContentList } from "./getPublishedManagedContentList";
 
@@ -93,31 +93,17 @@ export async function getPublicContentList({
       source: "managed",
     }));
 
-  return [
+  return sortContentByOrder(
+  [
     ...normalizedManagedContent,
     ...normalizedStaticContent,
-  ].sort(compareContentOrder);
-}
-
-function compareContentOrder(
-  a: PublicContentListItem,
-  b: PublicContentListItem
-): number {
-  const aHasOrder = a.order !== undefined && a.order !== null;
-  const bHasOrder = b.order !== undefined && b.order !== null;
-
-  // Items with an explicit order appear first.
-  if (aHasOrder && !bHasOrder) return -1;
-  if (!aHasOrder && bHasOrder) return 1;
-
-  // Sort explicitly ordered items numerically.
-  if (aHasOrder && bHasOrder && a.order !== b.order) {
-    return a.order! - b.order!;
+  ],
+  {
+    section,
+    category,
   }
+);
 
-  // Deterministic fallback for items with equal or missing order.
-  return a.title.localeCompare(b.title);
-}
 
 function createContentKey(
   section: ManagedContentSection,
@@ -129,4 +115,5 @@ function createContentKey(
     category?.trim().toLowerCase() ?? "",
     slug.trim().toLowerCase(),
   ].join(":");
+}
 }

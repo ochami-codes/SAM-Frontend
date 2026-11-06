@@ -38,7 +38,6 @@ onClick={(event) => event.stopPropagation()}
          >
 Upload Images </h2>
 
-```
         <p className="mt-1 text-sm text-gray-500">
           Add images to your SAM media library.
         </p>

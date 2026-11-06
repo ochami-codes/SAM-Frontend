@@ -1,6 +1,7 @@
 import { getCloudinaryUploadSignature } from "@/src/lib/api/cloudinary";
 
 export interface CloudinaryUploadResult {
+asset_id: string;  
 public_id: string;
 secure_url: string;
 resource_type: string;
@@ -9,6 +10,7 @@ bytes: number;
 }
 
 interface CloudinaryUploadResponse {
+asset_id?: string;  
 secure_url?: string;
 public_id?: string;
 resource_type?: string;
@@ -93,6 +95,7 @@ xhr.onload = () => {
 
   try {
     response = JSON.parse(xhr.responseText);
+    
   } catch {
     reject(new Error("Invalid response from Cloudinary."));
     return;
@@ -108,6 +111,7 @@ xhr.onload = () => {
   }
 
   if (
+    !response.asset_id ||
     !response.secure_url ||
     !response.public_id ||
     response.resource_type !== "image" ||
@@ -128,6 +132,7 @@ xhr.onload = () => {
     resource_type: response.resource_type,
     format: response.format,
     bytes: response.bytes,
+    asset_id: response.asset_id,
   });
 };
 

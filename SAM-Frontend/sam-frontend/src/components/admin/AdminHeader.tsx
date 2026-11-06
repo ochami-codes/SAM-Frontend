@@ -1,20 +1,22 @@
 "use client";
 
 import { Bell, Menu, UserCircle } from "lucide-react";
-
-type AdminRole = "super_admin" | "admin";
+import { useAuth } from "@/src/hooks/auth/useAuth";
 
 interface AdminHeaderProps {
-  role: AdminRole;
-  name?: string;
   onMenuClick: () => void;
 }
 
 export default function AdminHeader({
-  role,
-  name = "Administrator",
   onMenuClick,
 }: AdminHeaderProps) {
+  const { user } = useAuth();
+
+  const isSuperAdmin = user?.role === "super_admin";
+
+  const name = user?.fullName ?? "Administrator";
+  const roleLabel = isSuperAdmin ? "Super Admin" : "Admin";
+
   return (
     <header className="sticky top-0 z-20 flex h-16 w-full shrink-0 items-center justify-between border-b border-sam-border bg-sam-surface/95 px-4 backdrop-blur-sm sm:px-6 lg:px-8">
       {/* Left side */}
@@ -32,8 +34,9 @@ export default function AdminHeader({
           <p className="truncate text-xs font-medium text-sam-muted sm:text-sm">
             Administration
           </p>
+
           <h2 className="truncate text-base font-semibold text-sam-text sm:text-lg">
-            {role === "super_admin" ? "Control Center" : "Admin Center"}
+            {isSuperAdmin ? "Control Center" : "Admin Center"}
           </h2>
         </div>
       </div>
@@ -46,18 +49,19 @@ export default function AdminHeader({
           className="relative rounded-lg p-2 text-sam-muted transition-colors hover:bg-sam-background hover:text-sam-text"
         >
           <Bell className="h-5 w-5" />
+
           <span className="absolute right-1.5 top-1.5 h-2 w-2 rounded-full bg-sam-yellow ring-2 ring-sam-surface" />
         </button>
 
         <div className="flex items-center gap-3 border-l border-sam-border pl-2 sm:pl-4">
           <UserCircle className="h-8 w-8 shrink-0 text-sam-muted sm:h-9 sm:w-9" />
+
           <div className="hidden sm:block">
             <p className="max-w-[14ch] truncate text-sm font-medium text-sam-text">
               {name}
             </p>
-            <p className="text-xs text-sam-muted">
-              {role === "super_admin" ? "Super Admin" : "Admin"}
-            </p>
+
+            <p className="text-xs text-sam-muted">{roleLabel}</p>
           </div>
         </div>
       </div>

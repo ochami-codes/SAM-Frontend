@@ -11,6 +11,7 @@ export interface LoginData {
 
 export interface User {
   id: string;
+  fullName: string;
   email: string;
   role: UserRole;
   mustChangePassword: boolean;
