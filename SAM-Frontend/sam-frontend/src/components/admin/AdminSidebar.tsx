@@ -56,6 +56,7 @@ const navigation: NavItem[] = [
   { label: "Administrators", href: "/admin/administrators", icon: ShieldCheck, roles: ["super_admin"] },
   { label: "Audit Log", href: "/admin/audit-log", icon: ScrollText, roles: ["super_admin"] },
   { label: "Settings", href: "/admin/settings", icon: Settings, roles: ["super_admin"] },
+  { label: "Profile", href: "/admin/profile", icon: Users, roles: ["super_admin", "admin"] },
 ];
 
 export default function AdminSidebar({ isOpen, onClose }: AdminSidebarProps) {

@@ -24,6 +24,7 @@ export type UserRole = "super_admin" | "admin";
 
 export interface AuthUser {
   fullName: string;
+  profileImage: string | null;  
   id: string;
   email: string;
   role: UserRole;
