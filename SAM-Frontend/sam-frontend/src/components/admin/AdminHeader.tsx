@@ -1,6 +1,8 @@
+
 "use client";
 
 import { Bell, Menu, UserCircle } from "lucide-react";
+import Image from "next/image";
 import { useAuth } from "@/src/hooks/auth/useAuth";
 
 interface AdminHeaderProps {
@@ -16,6 +18,9 @@ export default function AdminHeader({
 
   const name = user?.fullName ?? "Administrator";
   const roleLabel = isSuperAdmin ? "Super Admin" : "Admin";
+
+  // Update this property to match your actual user object.
+  const profileImage = user?.profileImage;
 
   return (
     <header className="sticky top-0 z-20 flex h-16 w-full shrink-0 items-center justify-between border-b border-sam-border bg-sam-surface/95 px-4 backdrop-blur-sm sm:px-6 lg:px-8">
@@ -54,7 +59,19 @@ export default function AdminHeader({
         </button>
 
         <div className="flex items-center gap-3 border-l border-sam-border pl-2 sm:pl-4">
-          <UserCircle className="h-8 w-8 shrink-0 text-sam-muted sm:h-9 sm:w-9" />
+          <div className="relative flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded-full bg-sam-background sm:h-9 sm:w-9">
+            {profileImage ? (
+              <Image
+                src={profileImage}
+                alt={`${name}'s profile`}
+                fill
+                sizes="36px"
+                className="object-cover"
+              />
+            ) : (
+              <UserCircle className="h-full w-full text-sam-muted" />
+            )}
+          </div>
 
           <div className="hidden sm:block">
             <p className="max-w-[14ch] truncate text-sm font-medium text-sam-text">
