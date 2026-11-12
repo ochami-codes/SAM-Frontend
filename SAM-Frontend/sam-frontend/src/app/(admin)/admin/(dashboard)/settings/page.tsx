@@ -1,7 +1,7 @@
 "use client";
 
 import { useAuth } from "@/src/hooks/auth/useAuth";
-
+import RequireRole from "@/src/components/auth/RequireRole";
 import { SystemHealthSection } from "@/src/components/admin/settings/SystemHealthSection";
 import { GlobalSecuritySection } from "@/src/components/admin/settings/GlobalSecuritySection";
 
@@ -25,6 +25,7 @@ export default function SettingsPage() {
   const isSuperAdmin = user.role === "super_admin";
 
   return (
+    <RequireRole roles={["super_admin"]}>
     <div className="space-y-8">
       <div>
         <h1 className="text-2xl font-semibold text-gray-900">
@@ -43,5 +44,6 @@ export default function SettingsPage() {
         canManage={isSuperAdmin}
       />
     </div>
+    </RequireRole>
   );
 }

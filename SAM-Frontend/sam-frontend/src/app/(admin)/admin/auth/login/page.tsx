@@ -1,41 +1,105 @@
 "use client";
 
-import { useState } from "react";
+import { useState, type SyntheticEvent } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 import AuthLayout from "@/src/components/layouts/AuthLayout";
 import Button from "@/src/components/ui/Button";
+
 import { useLogin } from "@/src/hooks/auth/useLogin";
+import { useAuth } from "@/src/hooks/auth/useAuth";
+
+import {
+  getCurrentUser,
+} from "@/src/lib/api/auth";
+
+import {
+  setAccessToken as setApiAccessToken,
+} from "@/src/lib/api/client";
 
 export default function AdminLoginPage() {
   const router = useRouter();
   const loginMutation = useLogin();
 
+  const { setAuthenticated } = useAuth();
+
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
-  function handleSubmit(
-  event: React.SubmitEvent<HTMLFormElement>
-) {
-  event.preventDefault();
+  async function handleSubmit(
+    event: SyntheticEvent<HTMLFormElement>
+  ) {
+    event.preventDefault();
 
-  loginMutation.mutate(
-    {
-      email,
-      password,
-    },
-    {
-      onSuccess: (user) => {
-        router.push(
-          user.mustChangePassword
-            ? "/admin/auth/change-password"
-            : "/admin"
-        );
+    loginMutation.mutate(
+      {
+        email,
+        password,
       },
-    }
-  );
-}
+      {
+        onSuccess: async (result) => {
+          // 1. Two-factor enrollment required.
+          if (
+            "requiresTwoFactorEnrollment" in result &&
+            result.requiresTwoFactorEnrollment
+          ) {
+            sessionStorage.setItem(
+              "twoFactorEnrollmentToken",
+              result.accessToken
+            );
+
+            sessionStorage.setItem(
+              "twoFactorMustChangePassword",
+              String(result.user.mustChangePassword)
+            );
+
+            setApiAccessToken(result.accessToken);
+
+            router.push("/admin/security/enroll-2fa");
+
+            return;
+          }
+
+          // 2. Two-factor verification required.
+          if (
+            "requiresTwoFactor" in result &&
+            result.requiresTwoFactor
+          ) {
+            sessionStorage.setItem(
+              "twoFactorChallengeToken",
+              result.challengeToken
+            );
+
+            sessionStorage.setItem(
+              "twoFactorMustChangePassword",
+              String(result.user.mustChangePassword)
+            );
+
+            router.push("/admin/security/verify-2fa");
+
+            return;
+          }
+
+          // 3. Normal authenticated login.
+          setApiAccessToken(result.accessToken);
+
+          const user = await getCurrentUser();
+
+          setAuthenticated(
+            user,
+            result.accessToken
+          );
+
+          router.push(
+            user.mustChangePassword
+              ? "/admin/auth/change-password"
+              : "/admin"
+          );
+        },
+      }
+    );
+  }
 
   return (
     <AuthLayout
@@ -60,9 +124,7 @@ export default function AdminLoginPage() {
             type="email"
             autoComplete="email"
             value={email}
-            onChange={(e) =>
-              setEmail(e.target.value)
-            }
+            onChange={(e) => setEmail(e.target.value)}
             placeholder="admin@example.com"
             required
             className="
@@ -101,9 +163,7 @@ export default function AdminLoginPage() {
             type="password"
             autoComplete="current-password"
             value={password}
-            onChange={(e) =>
-              setPassword(e.target.value)
-            }
+            onChange={(e) => setPassword(e.target.value)}
             placeholder="Enter your password"
             required
             className="

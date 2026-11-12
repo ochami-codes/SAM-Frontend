@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-
+import RequireRole  from "@/src/components/auth/RequireRole";
 import Button from "@/src/components/ui/Button";
 
 import InviteAdministratorForm from "@/src/components/admin/administrators/InviteAdministratorForm";
@@ -31,6 +31,7 @@ export default function AdministratorsPage() {
   const isLoading = administratorsLoading || invitationsLoading;
 
   return (
+    <RequireRole roles={["super_admin"]}>
     <div className="space-y-10">
       <header className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <div>
@@ -105,5 +106,6 @@ export default function AdministratorsPage() {
         </>
       )}
     </div>
+    </RequireRole>
   );
 }

@@ -78,7 +78,7 @@ export default function Button({
       }[variant]
     : {
         primary: "bg-sam-blue text-white hover:bg-sam-blue-dark",
-        secondary: "bg-sam-green text-white hover:opacity-90",
+        secondary: "bg-sam-blue text-white hover:bg-sam-blue-dark",
         outline:
           "border border-sam-blue text-sam-blue hover:bg-sam-blue hover:text-white",
         ghost: "text-sam-blue hover:bg-sam-blue/10",

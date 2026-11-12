@@ -18,12 +18,50 @@ export interface User {
   mustChangePassword: boolean;
 }
 
-export interface LoginResponse {
+interface LoginResponseBase {
   success: boolean;
   message: string;
   user: User;
+}
+
+/**
+ * Normal login response.
+ * The administrator has completed authentication.
+ */
+export interface LoginSuccessResponse extends LoginResponseBase {
+  accessToken: string;
+  requiresTwoFactor?: false;
+  requiresTwoFactorEnrollment?: false;
+}
+
+/**
+ * The administrator must enroll in 2FA.
+ *
+ * accessToken is a temporary enrollment token,
+ * not a normal authenticated access token.
+ */
+export interface TwoFactorEnrollmentRequiredResponse
+  extends LoginResponseBase {
+  requiresTwoFactorEnrollment: true;
   accessToken: string;
 }
+
+/**
+ * The administrator must verify an authenticator code.
+ *
+ * challengeToken is temporary and must only be used
+ * for the 2FA login verification endpoint.
+ */
+export interface TwoFactorRequiredResponse extends LoginResponseBase {
+  requiresTwoFactor: true;
+  challengeToken: string;
+  expiresAt: string;
+}
+
+export type LoginResponse =
+  | LoginSuccessResponse
+  | TwoFactorEnrollmentRequiredResponse
+  | TwoFactorRequiredResponse;
 
 export interface RefreshResponse {
   success: boolean;
@@ -38,8 +76,13 @@ export interface MessageResponse {
 /**
  * Login
  *
- * The backend sets the refresh token as an HttpOnly cookie
- * and returns the access token in the response body.
+ * The backend may return:
+ * 1. Normal authenticated access.
+ * 2. A temporary 2FA enrollment token.
+ * 3. A temporary 2FA verification challenge.
+ *
+ * The refresh token is set as an HttpOnly cookie
+ * only after authentication is completed.
  */
 export function login(data: LoginData) {
   return api<LoginResponse>("/api/auth/login", {

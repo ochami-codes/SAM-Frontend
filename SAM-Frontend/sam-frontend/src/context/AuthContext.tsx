@@ -12,6 +12,7 @@ import { useRouter } from "next/navigation";
 import {
   getCurrentUser,
   login as loginRequest,
+  LoginResponse,
   logout as logoutRequest,
   refreshAccessToken,
 } from "@/src/lib/api/auth";
@@ -36,7 +37,7 @@ interface AuthContextValue {
   accessToken: string | null;
   isAuthenticated: boolean;
   isLoading: boolean;
-  login: (email: string, password: string) => Promise<AuthUser>;
+  login: (email: string, password: string) => Promise<LoginResponse>;
   refreshAuth: () => Promise<void>;
   logout: () => Promise<void>;
   setAuthenticated: (
@@ -97,26 +98,43 @@ export function AuthProvider({
   }, [refreshAuth]);
 
   const login = useCallback(
-    async (
-      email: string,
-      password: string
-    ): Promise<AuthUser> => {
-      const result = await loginRequest({
-        email,
-        password,
-      });
+  async (
+    email: string,
+    password: string
+  ): Promise<LoginResponse> => {
+    const result = await loginRequest({
+      email,
+      password,
+    });
 
-      setAccessToken(result.accessToken);
-      setApiAccessToken(result.accessToken);
+    // The administrator must enroll in 2FA.
+    if (
+      "requiresTwoFactorEnrollment" in result &&
+      result.requiresTwoFactorEnrollment
+    ) {
+      return result;
+    }
 
-      const currentUser = await getCurrentUser();
+    // The administrator must verify an authenticator code.
+    if (
+      "requiresTwoFactor" in result &&
+      result.requiresTwoFactor
+    ) {
+      return result;
+    }
 
-      setUser(currentUser);
+    // Normal authenticated login.
+    setAccessToken(result.accessToken);
+    setApiAccessToken(result.accessToken);
 
-      return currentUser;
-    },
-    []
-  );
+    const currentUser = await getCurrentUser();
+
+    setUser(currentUser);
+
+    return result;
+  },
+  []
+);
 
   const logout = useCallback(
     async (): Promise<void> => {

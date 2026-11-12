@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import Link from "next/link";
 import { FolderTree, Plus } from "lucide-react";
-
+import RequireRole from "@/src/components/auth/RequireRole";
 import type {
   ManagedContentSection,
   ManagedContentStatus,
@@ -47,6 +47,7 @@ export default function ManagedContentPage() {
   }, [content]);
 
   return (
+    <RequireRole roles={["super_admin", "admin"]}>
     <div className="space-y-6">
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
   <div>
@@ -138,5 +139,6 @@ export default function ManagedContentPage() {
         </p>
       )}
     </div>
+    </RequireRole>
   );
 }

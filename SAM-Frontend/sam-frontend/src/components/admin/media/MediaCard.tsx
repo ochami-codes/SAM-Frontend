@@ -12,9 +12,13 @@ import { MediaPreviewModal } from "./MediaPreviewModal";
 
 interface MediaCardProps {
   item: CloudinaryMediaItem;
+  onSelect?: (item: CloudinaryMediaItem) => void;
 }
 
-export function MediaCard({ item }: MediaCardProps) {
+export function MediaCard({
+  item,
+  onSelect,
+}: MediaCardProps) {
   const [isPreviewOpen, setIsPreviewOpen] = useState(false);
 
   const {
@@ -80,14 +84,24 @@ export function MediaCard({ item }: MediaCardProps) {
             </p>
           </div>
 
-          <MediaCardActions
-            publicId={item.public_id}
-            secureUrl={item.secure_url}
-            filename={filename}
-            isInUse={isInUse}
-            isDeleting={isDeleting}
-            onDelete={handleDelete}
-          />
+          {onSelect ? (
+            <button
+              type="button"
+              onClick={() => onSelect(item)}
+              className="w-full rounded-md bg-sam-blue px-3 py-2 text-sm font-medium text-white transition hover:bg-sam-blue-dark"
+            >
+              Use this image
+            </button>
+          ) : (
+            <MediaCardActions
+              publicId={item.public_id}
+              secureUrl={item.secure_url}
+              filename={filename}
+              isInUse={isInUse}
+              isDeleting={isDeleting}
+              onDelete={handleDelete}
+            />
+          )}
 
           <MediaContentReferences usedBy={item.usedBy} />
         </div>

@@ -1,5 +1,5 @@
 import { api } from "./client";
-
+import type { User } from "./auth";
 export interface TwoFactorStatus {
   enabled: boolean;
   enabledAt: string | null;
@@ -21,6 +21,13 @@ interface ApiResponse<T> {
   success: boolean;
   message?: string;
   data: T;
+}
+
+export interface TwoFactorLoginResponse {
+  success: boolean;
+  message: string;
+  user: User;
+  accessToken: string;
 }
 
 /**
@@ -85,4 +92,39 @@ export async function verifyTwoFactorSetup(
   }
 
   return response.data;
+}
+
+/**
+ * Complete login by verifying the administrator's
+ * authenticator code against a temporary challenge.
+ *
+ * Creates a fully authenticated session only after
+ * successful verification.
+ */
+export async function verifyTwoFactorLogin(
+  challengeToken: string,
+  code: string,
+): Promise<TwoFactorLoginResponse> {
+  const response = await api<TwoFactorLoginResponse>(
+    "/api/auth/2fa/verify-login",
+    {
+      method: "POST",
+      body: JSON.stringify({
+        challengeToken,
+        code,
+      }),
+    },
+  );
+
+  if (
+    !response.success ||
+    !response.accessToken ||
+    !response.user
+  ) {
+    throw new Error(
+      response.message || "Two-factor verification failed.",
+    );
+  }
+
+  return response;
 }

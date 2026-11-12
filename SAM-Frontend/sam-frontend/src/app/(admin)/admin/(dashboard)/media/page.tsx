@@ -2,7 +2,7 @@
 
 import { useCloudinaryMedia } from "@/src/hooks/media/useCloudinaryMedia";
 import { useState } from "react";
-
+import RequireRole from "@/src/components/auth/RequireRole";
 import {
   type MediaSortOrder,
 } from "@/src/components/admin/media/MediaToolbar";
@@ -25,6 +25,7 @@ const [sortOrder, setSortOrder] =
   const media = data?.data.items ?? [];
 
   return (
+    <RequireRole roles={["super_admin", "admin"]}>
     <div className="space-y-6">
       <MediaHeader />
 
@@ -46,5 +47,6 @@ const [sortOrder, setSortOrder] =
   onSortChange={setSortOrder}
 />
     </div>
+    </RequireRole>
   );
 }

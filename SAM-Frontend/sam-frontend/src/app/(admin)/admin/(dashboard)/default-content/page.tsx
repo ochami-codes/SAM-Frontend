@@ -6,7 +6,7 @@ import { FileText } from "lucide-react";
 
 import Card from "@/src/components/ui/Card";
 import { useContentList } from "@/src/hooks/content/useContentList";
-
+import RequireRole from "@/src/components/auth/RequireRole";
 // Import modular sections
 import ArticlesSection from "@/src/components/admin/default-content/ArticleSection";
 import BibleStudySection from "@/src/components/admin/default-content/BibleStudySection";
@@ -26,6 +26,7 @@ export default function ContentPage() {
   };
 
   if (isLoading) {
+  
     return (
       <div className="space-y-6">
         <PageHeader />
@@ -51,6 +52,7 @@ export default function ContentPage() {
   }
 
   return (
+    <RequireRole roles={["super_admin"]}>
     <div className="space-y-8">
       <PageHeader />
 
@@ -89,6 +91,7 @@ export default function ContentPage() {
         </div>
       )}
     </div>
+    </RequireRole>
   );
 }
 

@@ -2,13 +2,13 @@
 
 import { Images } from "lucide-react";
 import { useMemo } from "react";
+
 import {
   MediaToolbar,
   type MediaSortOrder,
 } from "./MediaToolbar";
 
 import type { CloudinaryMediaItem } from "@/src/lib/api/media";
-
 import { MediaCard } from "./MediaCard";
 
 interface MediaGridProps {
@@ -20,6 +20,7 @@ interface MediaGridProps {
   sortOrder: MediaSortOrder;
   onSearchChange: (value: string) => void;
   onSortChange: (value: MediaSortOrder) => void;
+  onSelect?: (item: CloudinaryMediaItem) => void;
 }
 
 export function MediaGrid({
@@ -31,37 +32,39 @@ export function MediaGrid({
   sortOrder,
   onSearchChange,
   onSortChange,
+  onSelect,
 }: MediaGridProps) {
-    const filteredItems = useMemo(() => {
-  const query = search.trim().toLowerCase();
+  const filteredItems = useMemo(() => {
+    const query = search.trim().toLowerCase();
 
-  return items
-    .filter((item) => {
-      if (!query) {
-        return true;
-      }
+    return items
+      .filter((item) => {
+        if (!query) return true;
 
-      return item.public_id.toLowerCase().includes(query);
-    })
-    .sort((a, b) => {
-      const dateA = new Date(a.created_at).getTime();
-      const dateB = new Date(b.created_at).getTime();
+        return item.public_id.toLowerCase().includes(query);
+      })
+      .sort((a, b) => {
+        const dateA = new Date(a.created_at).getTime();
+        const dateB = new Date(b.created_at).getTime();
 
-      return sortOrder === "newest"
-        ? dateB - dateA
-        : dateA - dateB;
-    });
-}, [items, search, sortOrder]);
+        return sortOrder === "newest"
+          ? dateB - dateA
+          : dateA - dateB;
+      });
+  }, [items, search, sortOrder]);
+
   return (
     <section className="rounded-lg border border-gray-200 bg-white p-4 sm:p-6">
       <div className="mb-5 flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
         <div>
           <h2 className="text-lg font-semibold text-gray-900">
-            All Images
+            {onSelect ? "Choose an Image" : "All Images"}
           </h2>
 
           <p className="mt-1 text-sm text-gray-500">
-            Browse and manage your uploaded images.
+            {onSelect
+              ? "Select an existing image from your Cloudinary library."
+              : "Browse and manage your uploaded images."}
           </p>
         </div>
 
@@ -74,14 +77,16 @@ export function MediaGrid({
           Refresh
         </button>
       </div>
+
       <div className="mb-5">
-  <MediaToolbar
-    search={search}
-    sortOrder={sortOrder}
-    onSearchChange={onSearchChange}
-    onSortChange={onSortChange}
-  />
-</div>
+        <MediaToolbar
+          search={search}
+          sortOrder={sortOrder}
+          onSearchChange={onSearchChange}
+          onSortChange={onSortChange}
+        />
+      </div>
+
       {isLoading ? (
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
           {Array.from({ length: 10 }).map((_, index) => (
@@ -112,28 +117,33 @@ export function MediaGrid({
             Try again
           </button>
         </div>
-      ) : items.length === 0 ? (
+      ) : filteredItems.length === 0 ? (
         <div className="py-12 text-center">
           <Images
             className="mx-auto h-10 w-10 text-gray-300"
             aria-hidden="true"
           />
-<h3 className="mt-3 text-sm font-medium text-gray-900">
-  {items.length === 0
-    ? "No images found"
-    : "No matching images"}
-</h3>
 
-<p className="mt-1 text-sm text-gray-500">
-  {items.length === 0
-    ? "Uploaded images will appear here."
-    : "Try a different filename or public ID."}
-</p>
+          <h3 className="mt-3 text-sm font-medium text-gray-900">
+            {items.length === 0
+              ? "No images found"
+              : "No matching images"}
+          </h3>
+
+          <p className="mt-1 text-sm text-gray-500">
+            {items.length === 0
+              ? "Uploaded images will appear here."
+              : "Try a different filename or public ID."}
+          </p>
         </div>
       ) : (
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4 xl:grid-cols-5">
           {filteredItems.map((item) => (
-            <MediaCard key={item.asset_id} item={item} />
+            <MediaCard
+              key={item.asset_id}
+              item={item}
+              onSelect={onSelect}
+            />
           ))}
         </div>
       )}

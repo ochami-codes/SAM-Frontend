@@ -50,26 +50,46 @@ export async function api<T>(
       "NETWORK_ERROR"
     );
   }
+if (!response.ok) {
+  let errorData: {
+    message?: string;
+    code?: string;
+  } = {};
 
-  if (!response.ok) {
-    let errorData: {
-      message?: string;
-      code?: string;
-    } = {};
-
-    try {
-      errorData = await response.json();
-    } catch {
-      // Response was not valid JSON.
-    }
-
-    throw new ApiError(
-      errorData.message ||
-        "Something went wrong. Please try again.",
-      response.status,
-      errorData.code
-    );
+  try {
+    errorData = await response.json();
+  } catch {
+    // Response was not valid JSON.
   }
+
+  const error = new ApiError(
+    errorData.message ||
+      "Something went wrong. Please try again.",
+    response.status,
+    errorData.code
+  );
+
+  const excluded403Codes = [
+    "TWO_FACTOR_ENROLLMENT_REQUIRED",
+    "INVALID_TOKEN_PURPOSE",
+    "INVALID_ENROLLMENT_TOKEN",
+    "ACCOUNT_INACTIVE",
+  ];
+
+  const isAccessDenied =
+    response.status === 403 &&
+    !excluded403Codes.includes(error.code ?? "");
+
+  if (
+    isAccessDenied &&
+    typeof window !== "undefined" &&
+    window.location.pathname !== "/admin/access-denied"
+  ) {
+    window.location.assign("/admin/access-denied");
+  }
+
+  throw error;
+}
 
   return response.json();
 }

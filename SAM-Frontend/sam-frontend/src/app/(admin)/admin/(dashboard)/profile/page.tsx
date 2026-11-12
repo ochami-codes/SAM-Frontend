@@ -6,7 +6,7 @@ import {
   ShieldCheck,
   UserRound,
 } from "lucide-react";
-
+import RequireRole from "@/src/components/auth/RequireRole";
 import { useAuth } from "@/src/hooks/auth/useAuth";
 import ProfilePhotoUploader from "@/src/components/admin/profile/ProfilePhotoUploader";
 import PersonalInformationForm from "@/src/components/admin/profile/PersonalInformationForm";
@@ -30,6 +30,7 @@ export default function ProfilePage() {
   }
 
   return (
+    <RequireRole roles={["super_admin", "admin"]}>
     <div className="space-y-8 pb-10">
       {/* Page header */}
       <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
@@ -117,5 +118,6 @@ export default function ProfilePage() {
 
 <ActiveSessions />
     </div>
+    </RequireRole>
   );
 }
