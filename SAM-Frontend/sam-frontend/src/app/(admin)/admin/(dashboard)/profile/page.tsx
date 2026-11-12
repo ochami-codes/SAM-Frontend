@@ -12,6 +12,7 @@ import ProfilePhotoUploader from "@/src/components/admin/profile/ProfilePhotoUpl
 import PersonalInformationForm from "@/src/components/admin/profile/PersonalInformationForm";
 import ChangePasswordForm from "@/src/components/admin/profile/ChangePasswordForm";
 import TwoFactorSettings from "@/src/components/admin/profile/TwoFactorSettings";
+import ActiveSessions from "@/src/components/admin/profile/ActiveSessions";
 
 export default function ProfilePage() {
   const { user, isLoading } = useAuth();
@@ -114,7 +115,7 @@ export default function ProfilePage() {
 
 <TwoFactorSettings />
 
-      {/* Active sessions - upcoming */}
+<ActiveSessions />
     </div>
   );
 }
