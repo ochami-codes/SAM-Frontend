@@ -73,3 +73,11 @@ export function isDefaultContentCategory(
     ) ?? false
   );
 }
+export function isDefaultContentSection(
+  sectionSlug: string
+): boolean {
+  return DEFAULT_CONTENT_METADATA.some(
+    (section) =>
+      section.slug.toLowerCase() === sectionSlug.toLowerCase()
+  );
+}

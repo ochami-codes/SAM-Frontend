@@ -43,7 +43,11 @@ export interface UpdateContentMetadataInput {
   name?: string;
   heroImage?: string | null;
 }
-
+export interface DeleteContentMetadataResponse {
+  type: "section" | "category";
+  slug: string;
+  sectionSlug?: string;
+}
 interface MetadataApiResponse<T> {
   success: boolean;
   data: T;
@@ -120,6 +124,28 @@ export async function updateContentMetadata(
 
   if (!response.success || !response.data) {
     throw new Error("Failed to update content metadata.");
+  }
+
+  return response.data;
+}
+export async function deleteContentMetadata(
+  type: "section" | "category",
+  slug: string,
+  sectionSlug?: string
+): Promise<DeleteContentMetadataResponse> {
+  const endpoint =
+    type === "section"
+      ? `/api/admin/managed-content/metadata/sections/${encodeURIComponent(slug)}`
+      : `/api/admin/managed-content/metadata/sections/${encodeURIComponent(sectionSlug ?? "")}/categories/${encodeURIComponent(slug)}`;
+
+  const response = await api<
+    MetadataApiResponse<DeleteContentMetadataResponse>
+  >(endpoint, {
+    method: "DELETE",
+  });
+
+  if (!response.success || !response.data) {
+    throw new Error("Failed to delete content metadata.");
   }
 
   return response.data;
