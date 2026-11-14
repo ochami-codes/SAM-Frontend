@@ -1,34 +1,45 @@
-
-
 export const seo = {
   home: {
-    title: "Second Advent Ministries (SAM) | Online Bible Prophecy & Evangelism",
-    description: "SAM is a global online evangelistic ministry sharing the hope of Jesus' Second Coming through free online Bible studies, family, health and prophetic teachings.",
+    title: "Second Advent Ministries | Bible Prophecy & Online Evangelism",
+    description:
+      "Discover the hope of Jesus Christ's Second Coming with Second Advent Ministries (SAM). Explore free online Bible studies, Bible prophecy, Christian family guidance, biblical health and spiritual growth.",
   },
+
   sections: {
     "bible-study": {
-      title: "Free Online Bible Study | Second Coming & Prophecy - SAM",
-      description: "Join free online Bible studies on Daniel, Revelation and Second Advent. Study at your own pace with Second Advent Ministries.",
+      title: "Free Online Bible Studies | Daniel, Revelation & Prophecy",
+      description:
+        "Study the Bible online for free with Second Advent Ministries. Explore Daniel, Revelation, Bible prophecy, salvation, the Second Coming of Jesus and essential biblical teachings.",
     },
-    "family": {
-      title: "Biblical Family Guidance - Marriage & Parenting | SAM",
-      description: "Bible-based guidance for Christian marriage, parenting and godly family living from Second Advent Ministries online.",
+
+    family: {
+      title: "Christian Family Life | Biblical Marriage & Relationships",
+      description:
+        "Discover biblical principles for Christian marriage, relationships, parenting and godly family living. Explore practical, Bible-based guidance for building Christ-centred homes.",
     },
-    "health": {
-      title: "Biblical Health Principles - Christian Wellness | SAM",
-      description: "Discover biblical health, temperance and wholistic wellness principles from the Bible with SAM Health Corner.",
+
+    health: {
+      title: "Biblical Health & Christian Wellness | SAM Health Corner",
+      description:
+        "Explore biblical health principles, Christian wellness, healthy living, temperance and practical lifestyle guidance inspired by Scripture and the writings of Ellen G. White.",
     },
   },
+
   about: {
-    title: "About SAM - Online Evangelistic Ministry & Mission",
-    description: "SAM is a 100% online ministry dedicated to preaching the Second Advent of Jesus Christ worldwide. No walls, just the Word.",
+    title: "About Second Advent Ministries | Our Mission & Beliefs",
+    description:
+      "Learn about Second Advent Ministries (SAM), an online evangelistic ministry proclaiming the everlasting gospel and the soon return of Jesus Christ. Discover our mission, beliefs and commitment to sharing God's Word worldwide.",
   },
+
   contact: {
-    title: "Contact SAM - Online Ministry",
-    description: "Connect with SAM online via email, WhatsApp and contact form. We are a fully online ministry serving worldwide.",
+    title: "Contact Second Advent Ministries | Get in Touch with SAM",
+    description:
+      "Contact Second Advent Ministries for Bible study enquiries, prayer requests, ministry partnerships and general questions. Connect with our online evangelistic ministry.",
   },
-articles: {
-    title: "Adventist Articles on Prophecy & Christian Living | SAM",
-    description: "Read articles on Bible prophecy, Second Coming, family and Christian living from Second Advent Ministries.",
-  }
-}
+
+  articles: {
+    title: "Christian Articles | Bible Prophecy & Biblical Living | SAM",
+    description:
+      "Read Bible-based articles exploring Bible prophecy, the Second Coming of Jesus, Christian faith, spiritual growth, family life and practical Christian living.",
+  },
+};
